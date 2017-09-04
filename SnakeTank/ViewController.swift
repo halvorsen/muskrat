@@ -10,13 +10,25 @@ import UIKit
 import SceneKit
 import ARKit
 
-class ViewController: UIViewController, ARSCNViewDelegate {
+class ViewController: UIViewController, ARSCNViewDelegate, refreshDelegate, BrothersUIAutoLayout, UIGestureRecognizerDelegate {
+    
+    let cover = UIView()
+    var spriteScene = GameScene(size: CGSize(width: 375, height: 667)) //skScene
+    var score = UILabel()
+    var scoreInt = Int() {didSet{score.text = String(scoreInt); Global.points = scoreInt}}
+    let view3 = SKView()
+    let instructionLabel = UILabel()
+    var timer = Timer()
+    var tap = UITapGestureRecognizer()
+    var myScheme: ColorScheme?
+    var wrapper = SCNNode()
 
     @IBOutlet var sceneView: ARSCNView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        myScheme = ColorScheme(rawValue: UserDefaults.standard.integer(forKey: "colorScheme"))
+        CustomColor.changeCustomColor(colorScheme: myScheme!)
         // Set the view's delegate
         sceneView.delegate = self
         
@@ -24,15 +36,26 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         sceneView.showsStatistics = true
         
         // Create a new scene
-        let scene = SCNScene(named: "art.scnassets/ship.scn")!
+        let scene = SCNScene(named: "art.scnassets/snake.scn")!
         
         // Set the scene to the view
         sceneView.scene = scene
+        
+        score.frame = CGRect(x: 0, y: 20*sh, width: 375*sw, height: 86*sh)
+        score.font = UIFont(name: "HelveticaNeue-Bold", size: 72*fontSizeMultiplier)
+        score.textColor = CustomColor.color3
+        score.alpha = 1.0
+        score.textAlignment = .center
+        score.text = String(Global.points)
+        view3.addSubview(score)
+        
+        tap.delegate = self
+        view.addGestureRecognizer(tap)
+        
+        wrapper = scene.rootNode.childNode(withName: "wrapper", recursively: false)!
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
+    private func startScene() {
         // Create a session configuration
         let configuration = ARWorldTrackingSessionConfiguration()
         
@@ -40,11 +63,90 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         sceneView.session.run(configuration)
     }
     
+    func changeScore(amount: Int) {
+        
+        scoreInt += amount
+        
+    }
+    
+    override var prefersStatusBarHidden: Bool {
+        return true
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        sceneView.addGestureRecognizer(spriteScene.swipeUp)
+        sceneView.addGestureRecognizer(spriteScene.swipeDown)
+        sceneView.addGestureRecognizer(spriteScene.swipeRight)
+        sceneView.addGestureRecognizer(spriteScene.swipeLeft)
+        myView.addGestureRecognizer(spriteScene.tap)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
         // Pause the view's session
         sceneView.session.pause()
+    }
+    
+    var myGameOverView = GameOverView()
+    var once = true
+    func gameOver() {
+        if once {
+            once = false
+            if Global.points > Global.topScore {
+                Global.topScore = Global.points
+                UserDefaults.standard.set(Global.points, forKey: "snakeTopScore")
+                // GCHelper.sharedInstance.reportLeaderboardIdentifier("highscore123654", score: Global.points)
+            }
+            
+            myGameOverView = GameOverView(backgroundColor: .black, buttonsColor: .white, bestScore: Global.topScore, thisScore: Global.points, colorScheme: myScheme!, vc: self)
+            //        myGameOverView.replay.addTarget(self, action: #selector(GameViewController.replayFunc(_:)), for: .touchUpInside)
+            //        myGameOverView.menu.addTarget(self, action: #selector(GameViewController.menuFunc(_:)), for: .touchUpInside)
+            //        myGameOverView.gameCenter.addTarget(self, action: #selector(GameViewController.gameCenterFunc(_:)), for: .touchUpInside)
+            //       myGameOverView.extraLife.addTarget(self, action: #selector(GameViewController.extraLifeFunc(_:)), for: .touchUpInside)
+            //   spriteScene.touchOnce = false
+            view.addSubview(myGameOverView)
+            Global.delay(bySeconds: 5.0) {
+                self.once = true
+            }
+            
+            
+            
+        }
+    }
+    
+    var activityView = UIActivityIndicatorView()
+    private func purchase(productId: String = "arSnake.IAP.idk") {
+        
+        activityView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+        activityView.center = self.view.center
+        activityView.startAnimating()
+        activityView.alpha = 0.0
+        self.view.addSubview(activityView)
+        //        SwiftyStoreKit.purchaseProduct(productId) { result in
+        //            switch result {
+        //            case .success( _):
+        //                Global.isPremium = true
+        //                UserDefaults.standard.set(true, forKey: "isPremiumMember")
+        //                self.activityView.removeFromSuperview()
+        //            case .error(let error):
+        //
+        //                print("error: \(error)")
+        //                print("Purchase Failed: \(error)")
+        //                self.activityView.removeFromSuperview()
+        //            }
+        //        }
+    }
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        
+        return true
     }
     
     override func didReceiveMemoryWarning() {

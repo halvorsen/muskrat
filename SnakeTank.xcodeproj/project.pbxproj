@@ -13,6 +13,22 @@
 		A933B22E1F5799130096F5EA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A933B22C1F5799130096F5EA /* Main.storyboard */; };
 		A933B2301F5799130096F5EA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A933B22F1F5799130096F5EA /* Assets.xcassets */; };
 		A933B2331F5799130096F5EA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A933B2311F5799130096F5EA /* LaunchScreen.storyboard */; };
+		A97239A31F5E02D9000519EB /* Deer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97239971F5E02D8000519EB /* Deer.swift */; };
+		A97239A41F5E02D9000519EB /* Mouse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97239A21F5E02D9000519EB /* Mouse.swift */; };
+		A97239A51F5E02D9000519EB /* GameOverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97239991F5E02D8000519EB /* GameOverView.swift */; };
+		A97239A61F5E02D9000519EB /* OldGameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97239A11F5E02D9000519EB /* OldGameViewController.swift */; };
+		A97239A71F5E02D9000519EB /* MenuButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97239951F5E02D8000519EB /* MenuButtons.swift */; };
+		A97239A81F5E02D9000519EB /* Tiger.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97239931F5E02D7000519EB /* Tiger.swift */; };
+		A97239A91F5E02D9000519EB /* Zombie.swift in Sources */ = {isa = PBXBuildFile; fileRef = A972399F1F5E02D8000519EB /* Zombie.swift */; };
+		A97239AA1F5E02D9000519EB /* Eagle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A972399E1F5E02D8000519EB /* Eagle.swift */; };
+		A97239AB1F5E02D9000519EB /* TestScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97239941F5E02D8000519EB /* TestScene.swift */; };
+		A97239AC1F5E02D9000519EB /* Scene.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97239961F5E02D8000519EB /* Scene.swift */; };
+		A97239AD1F5E02D9000519EB /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = A972399D1F5E02D8000519EB /* Global.swift */; };
+		A97239AE1F5E02D9000519EB /* Butterfly.swift in Sources */ = {isa = PBXBuildFile; fileRef = A972399B1F5E02D8000519EB /* Butterfly.swift */; };
+		A97239AF1F5E02D9000519EB /* CustomColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97239A01F5E02D9000519EB /* CustomColor.swift */; };
+		A97239B01F5E02D9000519EB /* UIProtocolExtentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A972399C1F5E02D8000519EB /* UIProtocolExtentions.swift */; };
+		A97239B11F5E02D9000519EB /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97239981F5E02D8000519EB /* GameScene.swift */; };
+		A97239B21F5E02D9000519EB /* Dot.swift in Sources */ = {isa = PBXBuildFile; fileRef = A972399A1F5E02D8000519EB /* Dot.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +40,22 @@
 		A933B22F1F5799130096F5EA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A933B2321F5799130096F5EA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A933B2341F5799130096F5EA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A97239931F5E02D7000519EB /* Tiger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tiger.swift; sourceTree = "<group>"; };
+		A97239941F5E02D8000519EB /* TestScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestScene.swift; sourceTree = "<group>"; };
+		A97239951F5E02D8000519EB /* MenuButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuButtons.swift; sourceTree = "<group>"; };
+		A97239961F5E02D8000519EB /* Scene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scene.swift; sourceTree = "<group>"; };
+		A97239971F5E02D8000519EB /* Deer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Deer.swift; sourceTree = "<group>"; };
+		A97239981F5E02D8000519EB /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
+		A97239991F5E02D8000519EB /* GameOverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameOverView.swift; sourceTree = "<group>"; };
+		A972399A1F5E02D8000519EB /* Dot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dot.swift; sourceTree = "<group>"; };
+		A972399B1F5E02D8000519EB /* Butterfly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Butterfly.swift; sourceTree = "<group>"; };
+		A972399C1F5E02D8000519EB /* UIProtocolExtentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIProtocolExtentions.swift; sourceTree = "<group>"; };
+		A972399D1F5E02D8000519EB /* Global.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
+		A972399E1F5E02D8000519EB /* Eagle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Eagle.swift; sourceTree = "<group>"; };
+		A972399F1F5E02D8000519EB /* Zombie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Zombie.swift; sourceTree = "<group>"; };
+		A97239A01F5E02D9000519EB /* CustomColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomColor.swift; sourceTree = "<group>"; };
+		A97239A11F5E02D9000519EB /* OldGameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OldGameViewController.swift; sourceTree = "<group>"; };
+		A97239A21F5E02D9000519EB /* Mouse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mouse.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +89,22 @@
 			isa = PBXGroup;
 			children = (
 				A933B2261F5799130096F5EA /* AppDelegate.swift */,
+				A972399B1F5E02D8000519EB /* Butterfly.swift */,
+				A97239A01F5E02D9000519EB /* CustomColor.swift */,
+				A97239971F5E02D8000519EB /* Deer.swift */,
+				A972399A1F5E02D8000519EB /* Dot.swift */,
+				A972399E1F5E02D8000519EB /* Eagle.swift */,
+				A97239991F5E02D8000519EB /* GameOverView.swift */,
+				A97239981F5E02D8000519EB /* GameScene.swift */,
+				A97239A11F5E02D9000519EB /* OldGameViewController.swift */,
+				A972399D1F5E02D8000519EB /* Global.swift */,
+				A97239951F5E02D8000519EB /* MenuButtons.swift */,
+				A97239A21F5E02D9000519EB /* Mouse.swift */,
+				A97239961F5E02D8000519EB /* Scene.swift */,
+				A97239941F5E02D8000519EB /* TestScene.swift */,
+				A97239931F5E02D7000519EB /* Tiger.swift */,
+				A972399C1F5E02D8000519EB /* UIProtocolExtentions.swift */,
+				A972399F1F5E02D8000519EB /* Zombie.swift */,
 				A933B2281F5799130096F5EA /* art.scnassets */,
 				A933B22A1F5799130096F5EA /* ViewController.swift */,
 				A933B22C1F5799130096F5EA /* Main.storyboard */,
@@ -139,8 +187,24 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A97239AA1F5E02D9000519EB /* Eagle.swift in Sources */,
+				A97239A51F5E02D9000519EB /* GameOverView.swift in Sources */,
+				A97239A81F5E02D9000519EB /* Tiger.swift in Sources */,
+				A97239AE1F5E02D9000519EB /* Butterfly.swift in Sources */,
+				A97239A71F5E02D9000519EB /* MenuButtons.swift in Sources */,
+				A97239B21F5E02D9000519EB /* Dot.swift in Sources */,
+				A97239A91F5E02D9000519EB /* Zombie.swift in Sources */,
+				A97239B01F5E02D9000519EB /* UIProtocolExtentions.swift in Sources */,
+				A97239AD1F5E02D9000519EB /* Global.swift in Sources */,
+				A97239A31F5E02D9000519EB /* Deer.swift in Sources */,
+				A97239AF1F5E02D9000519EB /* CustomColor.swift in Sources */,
 				A933B22B1F5799130096F5EA /* ViewController.swift in Sources */,
+				A97239B11F5E02D9000519EB /* GameScene.swift in Sources */,
 				A933B2271F5799130096F5EA /* AppDelegate.swift in Sources */,
+				A97239AC1F5E02D9000519EB /* Scene.swift in Sources */,
+				A97239A61F5E02D9000519EB /* OldGameViewController.swift in Sources */,
+				A97239AB1F5E02D9000519EB /* TestScene.swift in Sources */,
+				A97239A41F5E02D9000519EB /* Mouse.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
