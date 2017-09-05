@@ -7,5 +7,7 @@ enum CollisionTypes: Int {
     case head = 1
     case tail = 2
     case monster = 4
+    case bullet = 8
+    case wall = 16
     
 }

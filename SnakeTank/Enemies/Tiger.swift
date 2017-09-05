@@ -6,28 +6,37 @@
 //  Copyright © 2017 Aaron Halvorsen. All rights reserved.
 //
 
-import SpriteKit
+import SceneKit
 import GameplayKit
 
-class Tiger: SKShapeNode, BrothersUIAutoLayout {
+class Tiger: SCNNode, BrothersUIAutoLayout {
 
     
     var movementSpeed = Int()
     var color: UIColor = .white
     
-    init(origin: CGPoint, circleOfRadius: CGFloat = 7) {
+    init(height: Float, rotation: Float) {
         super.init()
-        let diameter = circleOfRadius * 2
-        let rect = CGRect(x: 0, y: 0, width: diameter, height: diameter)
-        self.path = CGPath(ellipseIn: rect, transform: nil)
-        self.physicsBody = SKPhysicsBody(circleOfRadius: 7, center: CGPoint(x: self.frame.midX, y: self.frame.midY))
-        self.position = origin
-        self.fillColor = color
-        self.physicsBody?.affectedByGravity = false
-        self.physicsBody?.categoryBitMask = CollisionTypes.monster.rawValue
-        self.physicsBody?.collisionBitMask = 0
-        self.physicsBody?.contactTestBitMask = CollisionTypes.tail.rawValue | CollisionTypes.head.rawValue
-        self.zPosition = 20000
+        let shape = SCNSphere(radius: 1)
+        
+        let sphereMaterial = SCNMaterial()
+        sphereMaterial.diffuse.contents = color
+        shape.materials = [sphereMaterial]
+        let sphere = SCNNode(geometry: shape)
+        sphere.position =  SCNVector3(x: 0, y: 0, z: -3)
+        let physShape = SCNPhysicsShape(geometry: shape, options: nil)
+        
+        let sphereBodys = SCNPhysicsBody(type: .kinematic, shape: physShape)
+        sphere.physicsBody = sphereBodys
+        
+        sphere.physicsBody?.isAffectedByGravity = false
+        sphere.physicsBody?.categoryBitMask = CollisionTypes.monster.rawValue
+        sphere.physicsBody?.collisionBitMask = 0
+        sphere.physicsBody?.contactTestBitMask = CollisionTypes.tail.rawValue | CollisionTypes.head.rawValue
+        sphere.position = SCNVector3(x: 0, y: height, z: 0)
+        sphere.rotation = SCNVector4(0,0,0,0)
+        
+        self.addChildNode(sphere)
         
     }
     

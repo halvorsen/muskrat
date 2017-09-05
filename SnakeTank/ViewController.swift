@@ -10,12 +10,12 @@ import UIKit
 import SceneKit
 import ARKit
 
-class ViewController: UIViewController, ARSCNViewDelegate, refreshDelegate, BrothersUIAutoLayout, UIGestureRecognizerDelegate {
+class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout, UIGestureRecognizerDelegate, SCNPhysicsContactDelegate {
     
     let cover = UIView()
     var score = UILabel()
     var scoreInt = Int() {didSet{score.text = String(scoreInt); Global.points = scoreInt}}
-    let view3 = SKView()
+   
     let instructionLabel = UILabel()
     var timer = Timer()
     var myScheme: ColorScheme?
@@ -44,9 +44,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, refreshDelegate, Brot
         // Set the view's delegate
         sceneView.delegate = self
         
-        // Show statistics such as fps and timing information
-        sceneView.showsStatistics = true
-        
         // Create a new scene
         let scene = SCNScene(named: "art.scnassets/snake.scn")!
         
@@ -59,7 +56,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, refreshDelegate, Brot
         score.alpha = 1.0
         score.textAlignment = .center
         score.text = String(Global.points)
-        view3.addSubview(score)
+        view.addSubview(score)
         
         tap.delegate = self
         view.addGestureRecognizer(tap)
@@ -84,10 +81,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, refreshDelegate, Brot
         swipeRight.direction = .right
         swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(ViewController.goLeft(_:)))
         swipeLeft.direction = .left
-        
-        for _ in 0...6 {
-            addFood(value: 2)
-        }
+//
+//        for _ in 0...6 {
+//            addFood(value: 2)
+//        }
         //snake tail time
         timer1 = Timer.scheduledTimer(timeInterval: timeInterval, target: self, selector: #selector(ViewController.followFunc), userInfo: nil, repeats: true)
         //monster timer
@@ -418,145 +415,139 @@ class ViewController: UIViewController, ARSCNViewDelegate, refreshDelegate, Brot
                 let distanceY = snakeHead.position.y - node.position.y
                 let moveObject = SCNAction.move(by: SCNVector3(0,distanceY,0), duration: TimeInterval(abs(distanceY)/15))
                 node.runAction(moveObject)
+                let distanceAngle = snakeHinge.rotation.w - node.rotation.w
+                let rotateObject = SCNAction.rotate(toAxisAngle: SCNVector4(x:0,y:1,z:0,w:snakeHinge.rotation.w), duration: TimeInterval(abs(distanceAngle/15)))
+                node.runAction(rotateObject)
             case .eagle:
-                var locationX = CGFloat()
-                var locationY = CGFloat()
-                if node.position.x > 60 && node.position.x < 315 {
-                    
-                    locationX = node.position.x - 50*sign
-                    
-                } else if node.position.x > 60 {
-                    locationX = node.position.x - 50
-                } else {
-                    locationX = node.position.x + 50
-                }
-                if node.position.y > 60 && node.position.y < 607 {
-                    
-                    locationY = node.position.y - 50*sign2
-                    
-                } else if node.position.y > 60 {
-                    locationY = node.position.y - 50
-                } else {
-                    locationY = node.position.y + 50
-                }
+           
+                let rotateObject = SCNAction.rotate(by: 1*sign, around: SCNVector3(0,1,0), duration: 1.0)
+                node.runAction(rotateObject)
                 
-                let moveObject = SKAction.move(to: CGPoint(x: locationX, y: locationY), duration: 0.5)
-                node.run(moveObject)
+                if node.position.y > -2.8 && node.position.y < 2.8 {
+                    let moveObject = SCNAction.move(by: SCNVector3(0,Float(0.1*sign2),0), duration: 1.0)
+                    node.runAction(moveObject)
+                    
+                } else if node.position.y > 2.7 {
+                    let moveObject = SCNAction.move(by: SCNVector3(0,Float(-0.1),0), duration: 1.0)
+                    node.runAction(moveObject)
+                } else {
+                    let moveObject = SCNAction.move(by: SCNVector3(0,Float(0.1),0), duration: 1.0)
+                    node.runAction(moveObject)
+                }
+              
             case .butterfly:
-                var locationX = CGFloat()
-                var locationY = CGFloat()
-                if node.position.x > 60 && node.position.x < 315 {
+                
+                let rotateObject = SCNAction.rotate(by: 1*sign, around: SCNVector3(0,1,0), duration: 1.0)
+                node.runAction(rotateObject)
+                
+                if node.position.y > -2.8 && node.position.y < 2.8 {
+                    let moveObject = SCNAction.move(by: SCNVector3(0,Float(0.1*sign2),0), duration: 1.0)
+                    node.runAction(moveObject)
                     
-                    locationX = node.position.x - 50*sign
-                    
-                } else if node.position.x > 60 {
-                    locationX = node.position.x - 50
+                } else if node.position.y > 2.7 {
+                    let moveObject = SCNAction.move(by: SCNVector3(0,Float(-0.1),0), duration: 2.0)
+                    node.runAction(moveObject)
                 } else {
-                    locationX = node.position.x + 50
-                }
-                if node.position.y > 60 && node.position.y < 607 {
-                    
-                    locationY = node.position.y - 50*sign2
-                    
-                } else if node.position.y > 60 {
-                    locationY = node.position.y - 50
-                } else {
-                    locationY = node.position.y + 50
+                    let moveObject = SCNAction.move(by: SCNVector3(0,Float(0.1),0), duration: 2.0)
+                    node.runAction(moveObject)
                 }
                 
-                let moveObject = SKAction.move(to: CGPoint(x: locationX, y: locationY), duration: 1.0)
-                node.run(moveObject)
             case .tiger:
-                let distance: CGFloat = abs(node.position.x - snakeHead.position.x) + abs(node.position.y - snakeHead.position.y)
-                let moveObject = SKAction.move(to: CGPoint(x: snakeHead.position.x, y: snakeHead.position.y), duration: Double(distance/75))
-                node.run(moveObject)
+                let distanceY = snakeHead.position.y - node.position.y
+                let moveObject = SCNAction.move(by: SCNVector3(0,distanceY,0), duration: TimeInterval(abs(distanceY)/75))
+                node.runAction(moveObject)
+                let distanceAngle = snakeHinge.rotation.w - node.rotation.w
+                let rotateObject = SCNAction.rotate(toAxisAngle: SCNVector4(x:0,y:1,z:0,w:snakeHinge.rotation.w), duration: TimeInterval(abs(distanceAngle/75)))
+                node.runAction(rotateObject)
+                node.runAction(moveObject)
             case .mouse:
-                let x = node.position.x
-                let y = node.position.y
-                if (x > 325 && y > 617) {
-                    let moveObject = SKAction.move(to: CGPoint(x: 355, y: 20), duration: 5.0)
-                    node.run(moveObject)
-                    
-                } else if (x < 50 && y < 50) {
-                    let moveObject = SKAction.move(to: CGPoint(x: 20, y: 647), duration: 2.5)
-                    node.run(moveObject)
-                } else if (x > 325 && y < 50) {
-                    let moveObject = SKAction.move(to: CGPoint(x: 20, y: 20), duration: 5.0)
-                    node.run(moveObject)
-                } else if (x < 50 && y > 617) {
-                    let moveObject = SKAction.move(to: CGPoint(x: 355, y: 647), duration: 2.5)
-                    node.run(moveObject)
-                }
+                break
+                //start mouse at the beginning to just move around circle quickly
                 
             case .deer:
-                let x = node.position.x
-                let y = node.position.y
-                if (x > 325 && y > 617) {
-                    let moveObject = SKAction.move(to: CGPoint(x: 20, y: 20), duration: 15.0)
-                    node.run(moveObject)
-                    
-                } else if (x < 50 && y < 50) {
-                    let moveObject = SKAction.move(to: CGPoint(x: 335, y: 20), duration: 7.5)
-                    node.run(moveObject)
-                } else if (x > 325 && y < 50) {
-                    let moveObject = SKAction.move(to: CGPoint(x: 20, y: 647), duration: 15.0)
-                    node.run(moveObject)
-                } else if (x < 50 && y > 617) {
-                    let moveObject = SKAction.move(to: CGPoint(x: 335, y: 647), duration: 7.5)
-                    node.run(moveObject)
-                }
+                let rotateObject = SCNAction.rotate(by: 5*sign, around: SCNVector3(0,1,0), duration: 1.0)
+                node.runAction(rotateObject)
                 
+                if node.position.y > -2.5 && node.position.y < 2.5 {
+                    let moveObject = SCNAction.move(by: SCNVector3(0,Float(0.3*sign2),0), duration: 1.0)
+                    node.runAction(moveObject)
+                    
+                } else if node.position.y > 2.4 {
+                    let moveObject = SCNAction.move(by: SCNVector3(0,Float(-0.3),0), duration: 2.0)
+                    node.runAction(moveObject)
+                } else {
+                    let moveObject = SCNAction.move(by: SCNVector3(0,Float(0.3),0), duration: 2.0)
+                    node.runAction(moveObject)
+                }
             }
         }
     }
     
     
     
-    func chooseRandomEnterance() -> CGPoint {
-        let random = arc4random_uniform(4)
-        var location = CGPoint()
+    func chooseRandomEnterance() -> (y:Float,rotation:Float) {
+        let random = arc4random_uniform(8)
+        var y = Float()
+        var rotation = Float()
         switch random {
         case 0:
-            location = CGPoint(x: 8*sw, y: 8*sh)
+            rotation = Float.pi
+            y = 1
         case 1:
-            location = CGPoint(x: 8*sw, y: 659*sh)
+            rotation = Float.pi*3/2
+            y = 2
         case 2:
-            location = CGPoint(x: 367*sw, y: 8*sh)
+            rotation = Float.pi/2
+            y = 2.5
+        case 3:
+            rotation = Float.pi
+            y = 1
+        case 4:
+            rotation = Float.pi*5/2
+            y = -1
+        case 5:
+            rotation = Float.pi/4
+            y = -2.5
+        case 6:
+            rotation = Float.pi*8
+            y = -0.5
         default:
-            location = CGPoint(x: 367*sw, y: 659*sh)
+            rotation = Float.pi*1.8
+            y = 0
             
         }
-        return location
+        return (y,rotation)
     }
+    
     var monsters = [(SCNNode,Monster)]()
     func addMonster(type: Monster) {
-        let enteranceLocation = chooseRandomEnterance()
+        let (enteranceLocationY,enteranceLocationTheta) = chooseRandomEnterance()
         switch type {
         case .zombie:
-            let zombie = Zombie(origin: enteranceLocation)
+            let zombie = Zombie(height: enteranceLocationY, rotation: enteranceLocationTheta)
             monsters.append((zombie,.zombie))
-            addChild(zombie)
+            wrapper.addChildNode(zombie)
         case .eagle:
-            let eagle = Eagle(origin: enteranceLocation)
+            let eagle = Eagle(height: enteranceLocationY, rotation: enteranceLocationTheta)
             monsters.append((eagle,.eagle))
-            addChild(eagle)
+            wrapper.addChildNode(eagle)
         case .butterfly:
-            let butterfly = Butterfly(origin: enteranceLocation)
+            let butterfly = Butterfly(height: enteranceLocationY, rotation: enteranceLocationTheta)
             monsters.append((butterfly,.butterfly))
-            addChild(butterfly)
+            wrapper.addChildNode(butterfly)
         case .tiger:
-            let tiger = Tiger(origin: enteranceLocation)
+            let tiger = Tiger(height: enteranceLocationY, rotation: enteranceLocationTheta)
             monsters.append((tiger,.tiger))
-            addChild(tiger)
+            wrapper.addChildNode(tiger)
         case .mouse:
-            let mouse = Mouse(origin: enteranceLocation)
+            let mouse = Mouse(height: enteranceLocationY, rotation: enteranceLocationTheta)
             monsters.append((mouse,.mouse))
-            addChild(mouse)
+            wrapper.addChildNode(mouse)
             
         case .deer:
-            let deer = Deer(origin: enteranceLocation)
+            let deer = Deer(height: enteranceLocationY, rotation: enteranceLocationTheta)
             monsters.append((deer,.deer))
-            addChild(deer)
+            wrapper.addChildNode(deer)
         }
     }
     
@@ -565,10 +556,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, refreshDelegate, Brot
         timer1.invalidate()
         timer2.invalidate()
         timer3.invalidate()
-        self.removeAllChildren()
+        
         snakeTail.removeAll()
         monsters.removeAll()
-        foodArray.removeAll()
+      //  foodArray.removeAll()
         
         
         
@@ -576,41 +567,34 @@ class ViewController: UIViewController, ARSCNViewDelegate, refreshDelegate, Brot
     
     func restartGame() {
         
-        snakeHead = SKShapeNode(circleOfRadius: ballRadius*sw )
-        snakeHead.position = CGPoint(x: 100*sw, y: 333.5*sh)
-        snakeHead.fillColor = .black
-        snakeHead.physicsBody = SKPhysicsBody(circleOfRadius: ballRadius*sw)
-        snakeHead.physicsBody?.affectedByGravity = false
-        snakeHead.physicsBody?.categoryBitMask = 1
-        snakeHead.physicsBody?.contactTestBitMask = 10 | 100
-        snakeHead.physicsBody?.collisionBitMask = 0
-        snakeHead.zPosition = 10001
+        myScheme = ColorScheme(rawValue: UserDefaults.standard.integer(forKey: "colorScheme"))
+        CustomColor.changeCustomColor(colorScheme: myScheme!)
         
-        addChild(snakeHead)
+        // Create a new scene
+        let scene = SCNScene(named: "art.scnassets/snake.scn")!
         
-        for _ in 0...6 {
-            addFood(value: 2)
-        }
+        // Set the scene to the view
+        sceneView.scene = scene
         
-        //snake tail time
-        timer1 = Timer.scheduledTimer(timeInterval: timeInterval, target: self, selector: #selector(GameScene.followFunc), userInfo: nil, repeats: true)
-        //monster timer
-        timer2 = Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(GameScene.monsterFunc), userInfo: nil, repeats: true)
-        //add monster timer
-        timer3 = Timer.scheduledTimer(timeInterval: 4.0, target: self, selector: #selector(GameScene.addRandomMonster), userInfo: nil, repeats: true)
+        wrapper = scene.rootNode.childNode(withName: "wrapper", recursively: false)!
+        snakeHead = wrapper.childNode(withName: "headHinge", recursively: false)!.childNode(withName: "head", recursively: false)!
+        snakeHinge = wrapper.childNode(withName: "headHinge", recursively: false)!
+        
+        timer1.fire();timer2.fire();timer3.fire()
         
     }
     
-    func didBegin(_ contact: SKPhysicsContact) {
+    
+    func physicsWorld(_ world: SCNPhysicsWorld, didBegin contact: SCNPhysicsContact) {
         print("didbegin")
-        print("A: \(contact.bodyA.categoryBitMask)")
-        print("B: \(contact.bodyB.categoryBitMask)")
+        print("A: \(contact.nodeA.physicsBody!.categoryBitMask)")
+        print("B: \(contact.nodeB.physicsBody!.categoryBitMask)")
         
-        if contact.bodyA.categoryBitMask == 1 && contact.bodyB.categoryBitMask == 666 {
+        if contact.nodeA.physicsBody!.categoryBitMask == CollisionTypes.head.rawValue && contact.nodeB.physicsBody!.categoryBitMask == CollisionTypes.monster.rawValue {
             // monster gotchya
             print("ate monster!")
-            if let item = contact.bodyB.node as? SKShapeNode {
-                item.removeFromParent()
+            if let item = contact.nodeB as? SCNNode {
+                item.removeFromParentNode()
                 loop: for i in 0..<monsters.count {
                     if item == monsters[i].0 {
                         
@@ -621,26 +605,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, refreshDelegate, Brot
                 }
             }
             
-        } else if contact.bodyA.categoryBitMask == 10 && contact.bodyB.categoryBitMask == 1 {
-            
-            // head hit food
-            print("EAT")
-            if let item = contact.bodyA.node as? SKShapeNode {
-                item.removeFromParent()
-                loop: for i in 0..<foodArray.count {
-                    if item == foodArray[i] {
-                        let amount = Int(foodLabels[i].text!)!
-                        delegateRefresh?.changeScore(amount: amount)
-                        foodArray.remove(at: i)
-                        foodLabels.remove(at: i)
-                        addTails(amount: amount)
-                        
-                        delayAdd()
-                        break loop
-                    }
-                }
-            }
-        } else if contact.bodyA.categoryBitMask == 100 && contact.bodyB.categoryBitMask == 1 {
+        } else if contact.nodeA.physicsBody!.categoryBitMask == CollisionTypes.wall.rawValue && contact.nodeB.physicsBody!.categoryBitMask == CollisionTypes.head.rawValue {
             //hit wall
             print("hit wall")
             switch direction! {
@@ -656,17 +621,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, refreshDelegate, Brot
                 break
             }
             
-        } else if contact.bodyA.categoryBitMask == 5 && contact.bodyB.categoryBitMask == 666 {
+        } else if contact.nodeA.physicsBody!.categoryBitMask == CollisionTypes.tail.rawValue && contact.nodeB.physicsBody!.categoryBitMask == CollisionTypes.monster.rawValue {
             // monster gotchya
             print("monster attack!")
-            delegateRefresh?.gameOver()
+            gameOver()
             resetGame()
             
-        } else if contact.bodyA.categoryBitMask == 25 && contact.bodyB.categoryBitMask == 666 {
+        } else if contact.nodeA.physicsBody!.categoryBitMask == CollisionTypes.bullet.rawValue && contact.nodeB.physicsBody!.categoryBitMask == CollisionTypes.monster.rawValue {
             // monster gotchya
             print("shot monster!")
-            if let item = contact.bodyB.node as? SKShapeNode {
-                item.removeFromParent()
+            if let item = contact.nodeB as? SCNNode {
+                item.removeFromParentNode()
                 loop: for i in 0..<monsters.count {
                     if item == monsters[i].0 {
                         
@@ -679,119 +644,29 @@ class ViewController: UIViewController, ARSCNViewDelegate, refreshDelegate, Brot
             
         }
         
+        //        else if contact.bodyA.categoryBitMask == 10 && contact.bodyB.categoryBitMask == 1 {
+        //
+        //            // head hit food
+        //            print("EAT")
+        //            if let item = contact.bodyA.node as? SKShapeNode {
+        //                item.removeFromParent()
+        //                loop: for i in 0..<foodArray.count {
+        //                    if item == foodArray[i] {
+        //                        let amount = Int(foodLabels[i].text!)!
+        //                        delegateRefresh?.changeScore(amount: amount)
+        //                        foodArray.remove(at: i)
+        //                        foodLabels.remove(at: i)
+        //                        addTails(amount: amount)
+        //
+        //                        delayAdd()
+        //                        break loop
+        //                    }
+        //                }
+        //            }
+        //        }
         
         
-    }
-    
-    func moveSprite(sprite: SKShapeNode, location: CGPoint) {
-        let action = SKAction.move(to: location, duration: 0.0)
-        sprite.run(action)
-    }
-    
-    func lockSprite(sprite: SKShapeNode, isDynamic: Bool) {
-        sprite.physicsBody?.isDynamic = isDynamic
-    }
-    
-    func colorSprite(sprite: SKShapeNode, colorString: String) {
-        switch colorString {
-        case "color1":
-            sprite.fillColor = CustomColor.color1
-        case "color2":
-            sprite.fillColor = CustomColor.color2
-        case "color3":
-            sprite.fillColor = CustomColor.color3
-        case "color4":
-            sprite.fillColor = CustomColor.color4
-        case "boundaryColor": break
-        //        sprite.fillColor = CustomColor.boundaryColor
-        default:
-            break
-        }
-    }
-    
-    var touchOnce = true
-    var touchDownPoint = CGPoint()
-    //    func touchDown(atPoint pos : CGPoint) {
-    //        if touchOnce {
-    //            //        delegateRefresh?.fire()
-    //            //        fired = false
-    //            touchDownPoint = pos
-    //            endTouchLocation = pos
-    //            startTouchLocation = pos
-    //            //        delegateRefresh?.refresh(start: startTouchLocation, end: endTouchLocation)
-    //            //        delegateRefresh?.turn(on: true)
-    //        }
-    //    }
-    //    var previouslySavedTouch = CGPoint()
-    //    var savedTouch = CGPoint(x: 0,y: 0)
-    //    func touchMoved(toPoint pos : CGPoint) {
-    //        if touchOnce {
-    //            //        endTouchLocation = pos
-    //            //        delegateRefresh?.refresh(start: startTouchLocation, end: endTouchLocation)
-    //            //            previouslySavedTouch = savedTouch
-    //            //            savedTouch = pos
-    //        }
-    //    }
-    //
-    //
-    //
-    //    func touchUp(atPoint pos : CGPoint) {
-    //        if touchOnce {
-    //            endTouchLocation = previouslySavedTouch
-    //            guard abs(pos.x - touchDownPoint.x) > 2 || abs(pos.y - touchDownPoint.y) > 2 else {return}
-    //
-    //            endTouchLocation = pos
-    //            let dx = startTouchLocation.x - endTouchLocation.x
-    //            let dy = startTouchLocation.y - endTouchLocation.y
-    //            let amplitude = CGFloat(sqrt(Double(dx*dx + dy*dy)))
-    //            //            icsBody?.applyImpulse(CGVector(dx: -16000*dx/amplitude, dy: -16000*dy/amplitude))
-    //
-    //            //            timer1 = Timer.scheduledTimer(withTimeInterval: 4.5, repeats: false) {_ in
-    //            //                self.changeDamping(amount: 3)
-    //            //            }
-    //            //            timer2 = Timer.scheduledTimer(withTimeInterval: 5.5, repeats: false) {_ in
-    //            //                self.changeDamping(amount: 10)
-    //            //            }
-    //            //            timer3 = Timer.scheduledTimer(withTimeInterval: 6, repeats: false) {_ in
-    //            //                self.changeDamping(amount: self.initialDamping)
-    //            //            }
-    //
-    //
-    //            touchOnce = false
-    //            Global.delay(bySeconds: 0.5) {
-    //                self.touchOnce = true
-    //            }
-    //        }
-    //
-    //    }
-    //
-    func tapTouch() {
-        if touchOnce {
-            guard abs(startTouchLocation.x - endTouchLocation.x) > 2 || abs(startTouchLocation.y - endTouchLocation.y) > 2 else {return}
-            
-            //            timer1.invalidate()
-            //            timer2.invalidate()
-            //            timer3.invalidate()
-            
-            let dx = startTouchLocation.x - endTouchLocation.x
-            let dy = startTouchLocation.y - endTouchLocation.y
-            let amplitude = CGFloat(sqrt(Double(dx*dx + dy*dy)))
-            
-            //            timer1 = Timer.scheduledTimer(withTimeInterval: 4.5, repeats: false) {_ in
-            //                self.changeDamping(amount: 3)
-            //            }
-            //            timer2 = Timer.scheduledTimer(withTimeInterval: 5.5, repeats: false) {_ in
-            //                self.changeDamping(amount: 10)
-            //            }
-            //            timer3 = Timer.scheduledTimer(withTimeInterval: 6, repeats: false) {_ in
-            //                self.changeDamping(amount: self.initialDamping)
-            //            }
-            
-            touchOnce = false
-            Global.delay(bySeconds: 0.5) {
-                self.touchOnce = true
-            }
-        }
         
     }
+
 }

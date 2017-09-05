@@ -6,7 +6,7 @@
 //  Copyright © 2017 Aaron Halvorsen. All rights reserved.
 //
 
-import SpriteKit
+import SceneKit
 import GameplayKit
 
 class Butterfly: SCNNode, BrothersUIAutoLayout {
