@@ -32,6 +32,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, refreshDelegate, Brot
     var foodArray = [SCNNode]()
    // var foodLabels = [SCNLabelNode]()
     let foodSize: CGFloat = 3.5
+    var snakeHead = SCNNode()
 
     @IBOutlet var sceneView: ARSCNView!
     
@@ -63,6 +64,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, refreshDelegate, Brot
         view.addGestureRecognizer(tap)
         
         wrapper = scene.rootNode.childNode(withName: "wrapper", recursively: false)!
+        snakeHead = wrapper.childNode(withName: "headHinge", recursively: false)!.childNode(withName: "head", recursively: false)!
     }
     
     private func startScene() {
@@ -72,24 +74,24 @@ class ViewController: UIViewController, ARSCNViewDelegate, refreshDelegate, Brot
         // Run the view's session
         sceneView.session.run(configuration)
         
-        swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(GameScene.goUp(_:)))
+        swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(ViewController.goUp(_:)))
         swipeUp.direction = .up
-        swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(GameScene.goDown(_:)))
+        swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(ViewController.goDown(_:)))
         swipeDown.direction = .down
-        swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(GameScene.goRight(_:)))
+        swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(ViewController.goRight(_:)))
         swipeRight.direction = .right
-        swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(GameScene.goLeft(_:)))
+        swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(ViewController.goLeft(_:)))
         swipeLeft.direction = .left
         
         for _ in 0...6 {
             addFood(value: 2)
         }
         //snake tail time
-        timer1 = Timer.scheduledTimer(timeInterval: timeInterval, target: self, selector: #selector(GameScene.followFunc), userInfo: nil, repeats: true)
+        timer1 = Timer.scheduledTimer(timeInterval: timeInterval, target: self, selector: #selector(ViewController.followFunc), userInfo: nil, repeats: true)
         //monster timer
-        timer2 = Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(GameScene.monsterFunc), userInfo: nil, repeats: true)
+        timer2 = Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(ViewController.monsterFunc), userInfo: nil, repeats: true)
         //add monster timer
-        timer3 = Timer.scheduledTimer(timeInterval: 8.0, target: self, selector: #selector(GameScene.addRandomMonster), userInfo: nil, repeats: true)
+        timer3 = Timer.scheduledTimer(timeInterval: 8.0, target: self, selector: #selector(ViewController.addRandomMonster), userInfo: nil, repeats: true)
     }
     
     func changeScore(amount: Int) {
@@ -109,7 +111,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, refreshDelegate, Brot
         sceneView.addGestureRecognizer(swipeLeft)
         
         tap = UITapGestureRecognizer(target: self, action: #selector(ViewController.fireFunc(_:)))
-        myView.addGestureRecognizer(tap)
+        sceneView.addGestureRecognizer(tap)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -137,11 +139,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, refreshDelegate, Brot
             }
             
             myGameOverView = GameOverView(backgroundColor: .black, buttonsColor: .white, bestScore: Global.topScore, thisScore: Global.points, colorScheme: myScheme!, vc: self)
-            //        myGameOverView.replay.addTarget(self, action: #selector(GameViewController.replayFunc(_:)), for: .touchUpInside)
-            //        myGameOverView.menu.addTarget(self, action: #selector(GameViewController.menuFunc(_:)), for: .touchUpInside)
-            //        myGameOverView.gameCenter.addTarget(self, action: #selector(GameViewController.gameCenterFunc(_:)), for: .touchUpInside)
-            //       myGameOverView.extraLife.addTarget(self, action: #selector(GameViewController.extraLifeFunc(_:)), for: .touchUpInside)
-            //   spriteScene.touchOnce = false
+         
             view.addSubview(myGameOverView)
             Global.delay(bySeconds: 5.0) {
                 self.once = true
@@ -165,6 +163,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, refreshDelegate, Brot
         
         let sphereBodys = SCNPhysicsBody(type: .kinematic, shape: physShape)
         sphere.physicsBody = sphereBodys
+        
+        sphere.physicsBody?.isAffectedByGravity = false
+        sphere.physicsBody?.categoryBitMask = 25
+        sphere.physicsBody?.collisionBitMask = 0
+      //  sphere.physicsBody?.contactTestBitMask = 5 | 25
         
         sceneView.scene.rootNode.addChildNode(sphere)
         snakeTail.append(sphere)
@@ -283,43 +286,28 @@ class ViewController: UIViewController, ARSCNViewDelegate, refreshDelegate, Brot
     var isFirstTap = true
     @objc func fireFunc(_ tapOnScreen: UITapGestureRecognizer) {
         print("tap!")
-        if isFirstTap {
-            isFirstTap = false
-
-            
-            
-           
-            
-        } else {
-            
-            
+        
             guard snakeTail.count > 0 else {return}
             let shotSpeed = duration/6
-            let tail = addOneTail()
-            tail.zPosition = 20000
-            tail.physicsBody?.categoryBitMask = 25
-            // tail.physicsBody?.contactTestBitMask = 666
-            snakeTail.last!.removeFromParent()
-            snakeTail.removeLast()
-            delegateRefresh?.changeScore(amount: -1)
-            addChild(tail)
+            //addSphereToFire()
+        
             switch direction! {
             case .up:
-                let moveObject = SKAction.move(to: CGPoint(x: tail.position.x, y: tail.position.y + 1000*sh), duration: shotSpeed)
-                tail.run(moveObject)
+                break
+                //shoot up
             case .down:
-                let moveObject = SKAction.move(to: CGPoint(x: tail.position.x, y: tail.position.y - 1000*sh), duration: shotSpeed)
-                tail.run(moveObject)
+                break
+                //shoot down
             case .right:
-                let moveObject = SKAction.move(to: CGPoint(x: tail.position.x + 1000*sh, y: tail.position.y), duration: shotSpeed)
-                tail.run(moveObject)
+                break
+                //shoot right
             case .left:
-                let moveObject = SKAction.move(to: CGPoint(x: tail.position.x - 1000*sh, y: tail.position.y), duration: shotSpeed)
-                tail.run(moveObject)
+                break
+                //shoot left
             default:
                 break
             }
-        }
+        
         
     }
     
@@ -329,12 +317,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, refreshDelegate, Brot
     @objc func followFunc() {
         guard snakeTail.count > 0 else {return}
         for i in 1..<snakeTail.count {
-            let moveObject = SKAction.move(to: snakeTail[i-1].position, duration: trailTime)
-            snakeTail[i].run(moveObject)
+            let moveObject = SCNAction.move(to: snakeTail[i-1].position, duration: trailTime)
+            snakeTail[i].runAction(moveObject)
         }
-        let moveObject = SKAction.move(to: CGPoint(x: snakeHead.position.x - ballRadius*sw, y: snakeHead.position.y - ballRadius*sh), duration: trailTime + 0.01)
-        snakeTail[0].run(moveObject)
-        
+        let moveObject = SCNAction.move(to: CGPoint(x: snakeHead.position.x - ballRadius*sw, y: snakeHead.position.y - ballRadius*sh), duration: trailTime + 0.01)
+        snakeTail[0].runAction(moveObject)
         
     }
     
@@ -345,8 +332,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, refreshDelegate, Brot
     var duration: Double = 10
     @objc private func goUp(_ swipe: UISwipeGestureRecognizer?) {
         print("swipeup")
-        let moveObject = SKAction.move(to: CGPoint(x:snakeHead.position.x, y:snakeHead.position.y + snakeSpeed*sh), duration: duration)
-        snakeHead.run(moveObject)
+        let moveObject = SCNAction.move(to: CGPoint(x:snakeHead.position.x, y:snakeHead.position.y + snakeSpeed*sh), duration: duration)
+        snakeHead.runAction(moveObject)
         if direction == .down {
             snakeHead.removeAllActions()
         }
