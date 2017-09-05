@@ -17,7 +17,7 @@ class Mouse: SCNNode,BrothersUIAutoLayout {
     
     init(height: Float, rotation: Float) {
         super.init()
-        let shape = SCNSphere(radius: 1)
+        let shape = SCNSphere(radius: Global.monsterRadius)
         
         let sphereMaterial = SCNMaterial()
         sphereMaterial.diffuse.contents = color
@@ -33,8 +33,10 @@ class Mouse: SCNNode,BrothersUIAutoLayout {
         sphere.physicsBody?.categoryBitMask = CollisionTypes.monster.rawValue
         sphere.physicsBody?.collisionBitMask = 0
         sphere.physicsBody?.contactTestBitMask = CollisionTypes.tail.rawValue | CollisionTypes.head.rawValue
-        sphere.position = SCNVector3(x: 0, y: height, z: 0)
-        sphere.rotation = SCNVector4(0,0,0,0)
+        sphere.position = SCNVector3(x: 0, y: 0, z: -3)
+        
+        self.position = SCNVector3(x: 0, y: height, z: 0)
+        self.rotation = SCNVector4(x:0,y:1,z:0,w:rotation)
         
         self.addChildNode(sphere)
         

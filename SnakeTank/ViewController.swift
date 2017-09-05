@@ -64,6 +64,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         wrapper = scene.rootNode.childNode(withName: "wrapper", recursively: false)!
         snakeHead = wrapper.childNode(withName: "headHinge", recursively: false)!.childNode(withName: "head", recursively: false)!
         snakeHinge = wrapper.childNode(withName: "headHinge", recursively: false)!
+        
+        startScene()
     }
     
     private func startScene() {
@@ -90,7 +92,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         //monster timer
         timer2 = Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(ViewController.monsterFunc), userInfo: nil, repeats: true)
         //add monster timer
-        timer3 = Timer.scheduledTimer(timeInterval: 8.0, target: self, selector: #selector(ViewController.addRandomMonster), userInfo: nil, repeats: true)
+        timer3 = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(ViewController.addRandomMonster), userInfo: nil, repeats: true)
     }
     
     func changeScore(amount: Int) {
@@ -413,51 +415,51 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             switch type {
             case .zombie:
                 let distanceY = snakeHead.position.y - node.position.y
-                let moveObject = SCNAction.move(by: SCNVector3(0,distanceY,0), duration: TimeInterval(abs(distanceY)/15))
+                let moveObject = SCNAction.move(by: SCNVector3(0,distanceY,0), duration: TimeInterval(abs(distanceY)/3))
                 node.runAction(moveObject)
                 let distanceAngle = snakeHinge.rotation.w - node.rotation.w
-                let rotateObject = SCNAction.rotate(toAxisAngle: SCNVector4(x:0,y:1,z:0,w:snakeHinge.rotation.w), duration: TimeInterval(abs(distanceAngle/15)))
+                let rotateObject = SCNAction.rotate(toAxisAngle: SCNVector4(x:0,y:1,z:0,w:snakeHinge.rotation.w), duration: TimeInterval(abs(distanceAngle/3)))
                 node.runAction(rotateObject)
             case .eagle:
            
-                let rotateObject = SCNAction.rotate(by: 1*sign, around: SCNVector3(0,1,0), duration: 1.0)
+                let rotateObject = SCNAction.rotate(by: 1*sign, around: SCNVector3(0,1,0), duration: 5.0)
                 node.runAction(rotateObject)
                 
                 if node.position.y > -2.8 && node.position.y < 2.8 {
-                    let moveObject = SCNAction.move(by: SCNVector3(0,Float(0.1*sign2),0), duration: 1.0)
+                    let moveObject = SCNAction.move(by: SCNVector3(0,Float(0.1*sign2),0), duration: 5.0)
                     node.runAction(moveObject)
                     
                 } else if node.position.y > 2.7 {
-                    let moveObject = SCNAction.move(by: SCNVector3(0,Float(-0.1),0), duration: 1.0)
+                    let moveObject = SCNAction.move(by: SCNVector3(0,Float(-0.1),0), duration: 5.0)
                     node.runAction(moveObject)
                 } else {
-                    let moveObject = SCNAction.move(by: SCNVector3(0,Float(0.1),0), duration: 1.0)
+                    let moveObject = SCNAction.move(by: SCNVector3(0,Float(0.1),0), duration: 5.0)
                     node.runAction(moveObject)
                 }
               
             case .butterfly:
                 
-                let rotateObject = SCNAction.rotate(by: 1*sign, around: SCNVector3(0,1,0), duration: 1.0)
+                let rotateObject = SCNAction.rotate(by: 1*sign, around: SCNVector3(0,1,0), duration: 5.0)
                 node.runAction(rotateObject)
                 
                 if node.position.y > -2.8 && node.position.y < 2.8 {
-                    let moveObject = SCNAction.move(by: SCNVector3(0,Float(0.1*sign2),0), duration: 1.0)
+                    let moveObject = SCNAction.move(by: SCNVector3(0,Float(0.1*sign2),0), duration: 5.0)
                     node.runAction(moveObject)
                     
                 } else if node.position.y > 2.7 {
-                    let moveObject = SCNAction.move(by: SCNVector3(0,Float(-0.1),0), duration: 2.0)
+                    let moveObject = SCNAction.move(by: SCNVector3(0,Float(-0.1),0), duration: 10.0)
                     node.runAction(moveObject)
                 } else {
-                    let moveObject = SCNAction.move(by: SCNVector3(0,Float(0.1),0), duration: 2.0)
+                    let moveObject = SCNAction.move(by: SCNVector3(0,Float(0.1),0), duration: 10.0)
                     node.runAction(moveObject)
                 }
                 
             case .tiger:
                 let distanceY = snakeHead.position.y - node.position.y
-                let moveObject = SCNAction.move(by: SCNVector3(0,distanceY,0), duration: TimeInterval(abs(distanceY)/75))
+                let moveObject = SCNAction.move(by: SCNVector3(0,distanceY,0), duration: TimeInterval(abs(distanceY)/25))
                 node.runAction(moveObject)
                 let distanceAngle = snakeHinge.rotation.w - node.rotation.w
-                let rotateObject = SCNAction.rotate(toAxisAngle: SCNVector4(x:0,y:1,z:0,w:snakeHinge.rotation.w), duration: TimeInterval(abs(distanceAngle/75)))
+                let rotateObject = SCNAction.rotate(toAxisAngle: SCNVector4(x:0,y:1,z:0,w:snakeHinge.rotation.w), duration: TimeInterval(abs(distanceAngle/25)))
                 node.runAction(rotateObject)
                 node.runAction(moveObject)
             case .mouse:
@@ -465,18 +467,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                 //start mouse at the beginning to just move around circle quickly
                 
             case .deer:
-                let rotateObject = SCNAction.rotate(by: 5*sign, around: SCNVector3(0,1,0), duration: 1.0)
+                let rotateObject = SCNAction.rotate(by: 0.05*sign, around: SCNVector3(0,1,0), duration: 5.0)
                 node.runAction(rotateObject)
                 
                 if node.position.y > -2.5 && node.position.y < 2.5 {
-                    let moveObject = SCNAction.move(by: SCNVector3(0,Float(0.3*sign2),0), duration: 1.0)
+                    let moveObject = SCNAction.move(by: SCNVector3(0,Float(0.3*sign2),0), duration: 5.0)
                     node.runAction(moveObject)
                     
                 } else if node.position.y > 2.4 {
-                    let moveObject = SCNAction.move(by: SCNVector3(0,Float(-0.3),0), duration: 2.0)
+                    let moveObject = SCNAction.move(by: SCNVector3(0,Float(-0.3),0), duration: 10.0)
                     node.runAction(moveObject)
                 } else {
-                    let moveObject = SCNAction.move(by: SCNVector3(0,Float(0.3),0), duration: 2.0)
+                    let moveObject = SCNAction.move(by: SCNVector3(0,Float(0.3),0), duration: 10.0)
                     node.runAction(moveObject)
                 }
             }

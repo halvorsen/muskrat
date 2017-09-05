@@ -6,13 +6,14 @@
 //  Copyright © 2017 Aaron Halvorsen. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 public struct Global {
     public static var points: Int = 0
     public static var isColorThemes = false
     public static var topScore = 0
     public static var gaveBonusLife = false
+    public static var monsterRadius: CGFloat = 0.05
     
     public static func delay(bySeconds seconds: Double, dispatchLevel: DispatchLevel = .main, closure: @escaping () -> Void) {
         let dispatchTime = DispatchTime.now() + seconds
