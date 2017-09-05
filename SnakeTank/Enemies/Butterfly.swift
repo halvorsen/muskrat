@@ -29,9 +29,9 @@ class Butterfly: SCNNode, BrothersUIAutoLayout {
         sphere.physicsBody = sphereBodys
        
         sphere.physicsBody?.isAffectedByGravity = false
-        sphere.physicsBody?.categoryBitMask = 666
+        sphere.physicsBody?.categoryBitMask = CollisionTypes.monster.rawValue
         sphere.physicsBody?.collisionBitMask = 0
-        sphere.physicsBody?.contactTestBitMask = 5 | 25
+        sphere.physicsBody?.contactTestBitMask = CollisionTypes.tail.rawValue | CollisionTypes.head.rawValue
         sphere.position = SCNVector3(x: 0, y: height, z: 0)
         sphere.rotation = SCNVector4(0,0,0,0)
         

@@ -33,6 +33,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, refreshDelegate, Brot
    // var foodLabels = [SCNLabelNode]()
     let foodSize: CGFloat = 3.5
     var snakeHead = SCNNode()
+    var snakeHinge = SCNNode()
 
     @IBOutlet var sceneView: ARSCNView!
     
@@ -65,6 +66,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, refreshDelegate, Brot
         
         wrapper = scene.rootNode.childNode(withName: "wrapper", recursively: false)!
         snakeHead = wrapper.childNode(withName: "headHinge", recursively: false)!.childNode(withName: "head", recursively: false)!
+        snakeHinge = wrapper.childNode(withName: "headHinge", recursively: false)!
     }
     
     private func startScene() {
@@ -144,9 +146,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, refreshDelegate, Brot
             Global.delay(bySeconds: 5.0) {
                 self.once = true
             }
-            
-            
-            
         }
     }
     
@@ -165,7 +164,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, refreshDelegate, Brot
         sphere.physicsBody = sphereBodys
         
         sphere.physicsBody?.isAffectedByGravity = false
-        sphere.physicsBody?.categoryBitMask = 25
+        sphere.physicsBody?.categoryBitMask = CollisionTypes.tail.rawValue
         sphere.physicsBody?.collisionBitMask = 0
       //  sphere.physicsBody?.contactTestBitMask = 5 | 25
         
@@ -313,14 +312,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, refreshDelegate, Brot
     
     let timeInterval = 0.05
     let trailTime = 0.05
-    let snakeSpeed: CGFloat = 1200
+    let snakeSpeed: Float = 1200
+    let ballRadius: Float = 1
     @objc func followFunc() {
         guard snakeTail.count > 0 else {return}
         for i in 1..<snakeTail.count {
             let moveObject = SCNAction.move(to: snakeTail[i-1].position, duration: trailTime)
             snakeTail[i].runAction(moveObject)
         }
-        let moveObject = SCNAction.move(to: CGPoint(x: snakeHead.position.x - ballRadius*sw, y: snakeHead.position.y - ballRadius*sh), duration: trailTime + 0.01)
+        let moveObject = SCNAction.move(to: SCNVector3(x: snakeHead.position.x - ballRadius, y: snakeHead.position.y - ballRadius, z: snakeHead.position.z - ballRadius), duration: trailTime + 0.01)
         snakeTail[0].runAction(moveObject)
         
     }
@@ -332,16 +332,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, refreshDelegate, Brot
     var duration: Double = 10
     @objc private func goUp(_ swipe: UISwipeGestureRecognizer?) {
         print("swipeup")
-        let moveObject = SCNAction.move(to: CGPoint(x:snakeHead.position.x, y:snakeHead.position.y + snakeSpeed*sh), duration: duration)
-        snakeHead.runAction(moveObject)
+        let moveObject = SCNAction.move(by: SCNVector3(0,4,0), duration: duration)
+        snakeHinge.runAction(moveObject)
         if direction == .down {
             snakeHead.removeAllActions()
         }
         direction = .up
     }
     @objc private func goDown(_ swipe: UISwipeGestureRecognizer?) {
-        let moveObject = SKAction.move(to: CGPoint(x:snakeHead.position.x, y:snakeHead.position.y - snakeSpeed*sh), duration: duration)
-        snakeHead.run(moveObject)
+        let moveObject = SCNAction.move(by: SCNVector3(0,-4,-0), duration: duration)
+        snakeHinge.runAction(moveObject)
         if direction == .up {
             snakeHead.removeAllActions()
         }
@@ -349,8 +349,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, refreshDelegate, Brot
         
     }
     @objc private func goRight(_ swipe: UISwipeGestureRecognizer?) {
-        let moveObject = SKAction.move(to: CGPoint(x:snakeHead.position.x + snakeSpeed*sh, y:snakeHead.position.y), duration: duration)
-        snakeHead.run(moveObject)
+        let moveObject = SCNAction.rotateBy(x: 0, y: CGFloat.pi*2, z: 0, duration: duration*3.14)
+        snakeHinge.runAction(moveObject)
         if direction == .left {
             snakeHead.removeAllActions()
         }
@@ -359,8 +359,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, refreshDelegate, Brot
     }
     @objc private func goLeft(_ swipe: UISwipeGestureRecognizer?) {
         
-        let moveObject = SKAction.move(to: CGPoint(x:snakeHead.position.x - snakeSpeed*sh, y:snakeHead.position.y), duration: duration)
-        snakeHead.run(moveObject)
+        let moveObject = SCNAction.rotateBy(x: 0, y: -CGFloat.pi*2, z: 0, duration: duration*3.14)
+        snakeHinge.runAction(moveObject)
         if direction == .right {
             snakeHead.removeAllActions()
         }
@@ -368,46 +368,26 @@ class ViewController: UIViewController, ARSCNViewDelegate, refreshDelegate, Brot
         
     }
     
-    private func delayAdd() {
-        let myDouble = Double(arc4random_uniform(5)) + 1.0
-        Global.delay(bySeconds: myDouble) {
-            let random = Int(arc4random_uniform(2))
-            if random == 0 {
-                self.addFood(value: Int(arc4random_uniform(UInt32(self.topFoodAmount))) + 1)
-            } else {
-                self.addFood(value: Int(arc4random_uniform(2)) + 1)
-            }
-        }
-    }
+//    private func delayAdd() {
+//        let myDouble = Double(arc4random_uniform(5)) + 1.0
+//        Global.delay(bySeconds: myDouble) {
+//            let random = Int(arc4random_uniform(2))
+//            if random == 0 {
+//                self.addFood(value: Int(arc4random_uniform(UInt32(self.topFoodAmount))) + 1)
+//            } else {
+//                self.addFood(value: Int(arc4random_uniform(2)) + 1)
+//            }
+//        }
+//    }
     
     
     private func addTails(amount: Int) {
         
         for i in 0..<amount {
             
-            let tail = addOneTail()
-            tail.zPosition = 10000 - CGFloat(i)
-            tail.physicsBody?.categoryBitMask = 5
-            //  tail.physicsBody?.contactTestBitMask = 666
-            tail.physicsBody?.affectedByGravity = false
-            snakeTail.append(tail)
-            addChild(tail)
+            addSphere()
         }
         
-    }
-    
-    private func addOneTail() -> SKShapeNode {
-        let rect = CGRect(x: 0, y: 0, width: 2*ballRadius*sw, height: 2*ballRadius*sw)
-        let tail = SKShapeNode(rect: rect, cornerRadius: sw)
-        tail.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: rect.size.width, height: rect.size.height), center: CGPoint(x: tail.frame.midX, y: tail.frame.midY))
-        //    tail.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: rect.size.width + 2, height: rect.size.height + 2))
-        //tail.physicsBody = SKPhysicsBody(edgeLoopFrom: rect)
-        tail.physicsBody?.affectedByGravity = false
-        // tail.physicsBody?.contactTestBitMask = 666
-        tail.physicsBody?.collisionBitMask = 0
-        tail.position = CGPoint(x: snakeHead.position.x - ballRadius*sw, y: snakeHead.position.y - ballRadius*sw)
-        tail.fillColor = .white
-        return tail
     }
     
     enum Monster {
@@ -432,12 +412,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, refreshDelegate, Brot
                 sign2 = 1
             }
             
-            
+            //!!!Need hinges on the monsters//
             switch type {
             case .zombie:
-                let distance: CGFloat = abs(node.position.x - snakeHead.position.x) + abs(node.position.y - snakeHead.position.y)
-                let moveObject = SKAction.move(to: CGPoint(x: snakeHead.position.x, y: snakeHead.position.y), duration: Double(distance/15))
-                node.run(moveObject)
+                let distanceY = snakeHead.position.y - node.position.y
+                let moveObject = SCNAction.move(by: SCNVector3(0,distanceY,0), duration: TimeInterval(abs(distanceY)/15))
+                node.runAction(moveObject)
             case .eagle:
                 var locationX = CGFloat()
                 var locationY = CGFloat()
@@ -548,7 +528,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, refreshDelegate, Brot
         }
         return location
     }
-    var monsters = [(SKShapeNode,Monster)]()
+    var monsters = [(SCNNode,Monster)]()
     func addMonster(type: Monster) {
         let enteranceLocation = chooseRandomEnterance()
         switch type {

@@ -23,9 +23,9 @@ class Eagle: SKShapeNode, BrothersUIAutoLayout {
         self.position = origin
         self.fillColor = color
         self.physicsBody?.affectedByGravity = false
-        self.physicsBody?.categoryBitMask = 666
+        self.physicsBody?.categoryBitMask = CollisionTypes.monster.rawValue
         self.physicsBody?.collisionBitMask = 0
-        self.physicsBody?.contactTestBitMask = 5 | 25
+        self.physicsBody?.contactTestBitMask = CollisionTypes.tail.rawValue | CollisionTypes.head.rawValue
         self.zPosition = 20000
         
     }
