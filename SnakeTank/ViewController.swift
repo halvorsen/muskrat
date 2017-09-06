@@ -92,7 +92,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         //monster timer
         timer2 = Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(ViewController.monsterFunc), userInfo: nil, repeats: true)
         //add monster timer
-        timer3 = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(ViewController.addRandomMonster), userInfo: nil, repeats: true)
+     //   timer3 = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(ViewController.addRandomMonster), userInfo: nil, repeats: true)
+        addTails(amount: 15)
     }
     
     func changeScore(amount: Int) {
@@ -273,7 +274,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     ]
     
     @objc private func addRandomMonster() {
-        addTails(amount: 1)
+        
         let random = Int(arc4random_uniform(6))
         addMonster(type: monsterDictionary[random]!)
         if monsterDictionary[random]! == .zombie {
@@ -285,26 +286,30 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     }
     
     var isFirstTap = true
+    let bulletSpeed: Float = 10
     @objc func fireFunc(_ tapOnScreen: UITapGestureRecognizer) {
         print("tap!")
         
             guard snakeTail.count > 0 else {return}
             let shotSpeed = duration/6
-            //addSphereToFire()
-        
+            let bullet = Bullet(height: snakeHinge.position.y, rotation: snakeHinge.rotation.y*snakeHinge.rotation.w)
+            wrapper.addChildNode(bullet)
             switch direction! {
             case .up:
-                break
-                //shoot up
+                let distance = 3-snakeHinge.position.y
+                let moveObject = SCNAction.move(by: SCNVector3(0,distance,0), duration: TimeInterval(distance/bulletSpeed))
+                bullet.runAction(moveObject)
+                
             case .down:
-                break
-                //shoot down
+                let distance = -3 - snakeHinge.position.y
+                let moveObject = SCNAction.move(by: SCNVector3(0,distance,0), duration: TimeInterval(abs(distance)/bulletSpeed))
+                bullet.runAction(moveObject)
             case .right:
-                break
-                //shoot right
+                let moveObject = SCNAction.rotateBy(x: 0, y: -CGFloat.pi*2, z: 0, duration: duration*3.14*1.5/3)
+                bullet.runAction(moveObject)
             case .left:
-                break
-                //shoot left
+                let moveObject = SCNAction.rotateBy(x: 0, y: CGFloat.pi*2, z: 0, duration: duration*3.14*1.5/3)
+                bullet.runAction(moveObject)
             default:
                 break
             }

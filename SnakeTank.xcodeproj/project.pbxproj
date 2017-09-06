@@ -25,6 +25,7 @@
 		A97239AF1F5E02D9000519EB /* CustomColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97239A01F5E02D9000519EB /* CustomColor.swift */; };
 		A97239B01F5E02D9000519EB /* UIProtocolExtentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A972399C1F5E02D8000519EB /* UIProtocolExtentions.swift */; };
 		A97239B21F5E02D9000519EB /* Dot.swift in Sources */ = {isa = PBXBuildFile; fileRef = A972399A1F5E02D8000519EB /* Dot.swift */; };
+		A982B29A1F5FA79100F03078 /* Bullet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A982B2991F5FA79100F03078 /* Bullet.swift */; };
 		A9F4BE711F5E4C8100A02837 /* CollisionTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F4BE701F5E4C8100A02837 /* CollisionTypes.swift */; };
 /* End PBXBuildFile section */
 
@@ -49,6 +50,7 @@
 		A972399F1F5E02D8000519EB /* Zombie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Zombie.swift; sourceTree = "<group>"; };
 		A97239A01F5E02D9000519EB /* CustomColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomColor.swift; sourceTree = "<group>"; };
 		A97239A21F5E02D9000519EB /* Mouse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mouse.swift; sourceTree = "<group>"; };
+		A982B2991F5FA79100F03078 /* Bullet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bullet.swift; sourceTree = "<group>"; };
 		A9F4BE701F5E4C8100A02837 /* CollisionTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollisionTypes.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -85,6 +87,7 @@
 				A933B2261F5799130096F5EA /* AppDelegate.swift */,
 				A9F4BE701F5E4C8100A02837 /* CollisionTypes.swift */,
 				A972399B1F5E02D8000519EB /* Enemy.swift */,
+				A982B2991F5FA79100F03078 /* Bullet.swift */,
 				A939E3D81F5E247500ACF55D /* Enemies */,
 				A97239A01F5E02D9000519EB /* CustomColor.swift */,
 				A939E3D91F5E24BA00ACF55D /* Menu */,
@@ -209,6 +212,7 @@
 				A933B22B1F5799130096F5EA /* ViewController.swift in Sources */,
 				A933B2271F5799130096F5EA /* AppDelegate.swift in Sources */,
 				A97239A41F5E02D9000519EB /* Mouse.swift in Sources */,
+				A982B29A1F5FA79100F03078 /* Bullet.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
