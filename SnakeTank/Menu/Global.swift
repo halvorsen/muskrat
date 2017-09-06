@@ -13,7 +13,7 @@ public struct Global {
     public static var isColorThemes = false
     public static var topScore = 0
     public static var gaveBonusLife = false
-    public static var monsterRadius: CGFloat = 0.05
+    public static var monsterRadius: CGFloat = 0.03
     
     public static func delay(bySeconds seconds: Double, dispatchLevel: DispatchLevel = .main, closure: @escaping () -> Void) {
         let dispatchTime = DispatchTime.now() + seconds

@@ -150,10 +150,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     
     private func addSphere() {
        
-        let shape = SCNSphere(radius: 1)
+        let shape = SCNSphere(radius: Global.monsterRadius)
         
         let sphereMaterial = SCNMaterial()
-        sphereMaterial.diffuse.contents = UIColor.green
+        sphereMaterial.emission.contents = [UIColor.black]
+        sphereMaterial.selfIllumination.contents = [UIColor.blue]
+        sphereMaterial.reflective.contents = [UIColor.black]
+       // sphereMaterial.
         shape.materials = [sphereMaterial]
         let sphere = SCNNode(geometry: shape)
         sphere.position =  SCNVector3(x: 0, y: 0, z: 0)
@@ -166,8 +169,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         sphere.physicsBody?.categoryBitMask = CollisionTypes.tail.rawValue
         sphere.physicsBody?.collisionBitMask = 0
       //  sphere.physicsBody?.contactTestBitMask = 5 | 25
-        
-        sceneView.scene.rootNode.addChildNode(sphere)
+        sphere.position = SCNVector3(x: 0, y: 0, z: 0)
+        wrapper.addChildNode(sphere)
         snakeTail.append(sphere)
         
     }
@@ -270,7 +273,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     ]
     
     @objc private func addRandomMonster() {
-        
+        addTails(amount: 1)
         let random = Int(arc4random_uniform(6))
         addMonster(type: monsterDictionary[random]!)
         if monsterDictionary[random]! == .zombie {
@@ -315,53 +318,64 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     let ballRadius: Float = 1
     @objc func followFunc() {
         guard snakeTail.count > 0 else {return}
+        
         for i in 1..<snakeTail.count {
+          
             let moveObject = SCNAction.move(to: snakeTail[i-1].position, duration: trailTime)
             snakeTail[i].runAction(moveObject)
         }
-        let moveObject = SCNAction.move(to: SCNVector3(x: snakeHead.position.x - ballRadius, y: snakeHead.position.y - ballRadius, z: snakeHead.position.z - ballRadius), duration: trailTime + 0.01)
+        //let _position = snakeHead.position
+       let globalPositionOfSnakeHead = snakeHinge.convertPosition(snakeHead.position, to: wrapper)
+       // let moveObject = SCNAction.move(to: snakeHead.position, duration: trailTime + 0.01)
+        let moveObject = SCNAction.move(to: SCNVector3(x: globalPositionOfSnakeHead.x , y: globalPositionOfSnakeHead.y , z: globalPositionOfSnakeHead.z ), duration: trailTime + 0.01)
         snakeTail[0].runAction(moveObject)
-        
+   
     }
     
     enum Facing {
         case up,down,left,right
     }
     var direction: Facing? = .up
-    var duration: Double = 10
+    var duration: Double = 5
     @objc private func goUp(_ swipe: UISwipeGestureRecognizer?) {
         print("swipeup")
+        snakeHinge.removeAllActions()
         let moveObject = SCNAction.move(by: SCNVector3(0,4,0), duration: duration)
         snakeHinge.runAction(moveObject)
         if direction == .down {
-            snakeHead.removeAllActions()
+            snakeHinge.removeAllActions()
         }
         direction = .up
     }
     @objc private func goDown(_ swipe: UISwipeGestureRecognizer?) {
+        print("swipedown")
+        snakeHinge.removeAllActions()
         let moveObject = SCNAction.move(by: SCNVector3(0,-4,-0), duration: duration)
         snakeHinge.runAction(moveObject)
         if direction == .up {
-            snakeHead.removeAllActions()
+            snakeHinge.removeAllActions()
         }
         direction = .down
         
     }
     @objc private func goRight(_ swipe: UISwipeGestureRecognizer?) {
-        let moveObject = SCNAction.rotateBy(x: 0, y: CGFloat.pi*2, z: 0, duration: duration*3.14)
+        print("swiperight")
+        snakeHinge.removeAllActions()
+        let moveObject = SCNAction.rotateBy(x: 0, y: -CGFloat.pi*2, z: 0, duration: duration*3.14*1.5)
         snakeHinge.runAction(moveObject)
         if direction == .left {
-            snakeHead.removeAllActions()
+            snakeHinge.removeAllActions()
         }
         direction = .right
         
     }
     @objc private func goLeft(_ swipe: UISwipeGestureRecognizer?) {
-        
-        let moveObject = SCNAction.rotateBy(x: 0, y: -CGFloat.pi*2, z: 0, duration: duration*3.14)
+        print("swipeleft")
+        snakeHinge.removeAllActions()
+        let moveObject = SCNAction.rotateBy(x: 0, y: CGFloat.pi*2, z: 0, duration: duration*3.14*1.5)
         snakeHinge.runAction(moveObject)
         if direction == .right {
-            snakeHead.removeAllActions()
+            snakeHinge.removeAllActions()
         }
         direction = .left
         
@@ -411,7 +425,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                 sign2 = 1
             }
             
-            //!!!Need hinges on the monsters//
             switch type {
             case .zombie:
                 let distanceY = snakeHead.position.y - node.position.y
@@ -526,28 +539,28 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         let (enteranceLocationY,enteranceLocationTheta) = chooseRandomEnterance()
         switch type {
         case .zombie:
-            let zombie = Zombie(height: enteranceLocationY, rotation: enteranceLocationTheta)
+            let zombie = Enemy(height: enteranceLocationY, rotation: enteranceLocationTheta)
             monsters.append((zombie,.zombie))
             wrapper.addChildNode(zombie)
         case .eagle:
-            let eagle = Eagle(height: enteranceLocationY, rotation: enteranceLocationTheta)
+            let eagle = Enemy(height: enteranceLocationY, rotation: enteranceLocationTheta)
             monsters.append((eagle,.eagle))
             wrapper.addChildNode(eagle)
         case .butterfly:
-            let butterfly = Butterfly(height: enteranceLocationY, rotation: enteranceLocationTheta)
+            let butterfly = Enemy(height: enteranceLocationY, rotation: enteranceLocationTheta)
             monsters.append((butterfly,.butterfly))
             wrapper.addChildNode(butterfly)
         case .tiger:
-            let tiger = Tiger(height: enteranceLocationY, rotation: enteranceLocationTheta)
+            let tiger = Enemy(height: enteranceLocationY, rotation: enteranceLocationTheta)
             monsters.append((tiger,.tiger))
             wrapper.addChildNode(tiger)
         case .mouse:
-            let mouse = Mouse(height: enteranceLocationY, rotation: enteranceLocationTheta)
+            let mouse = Enemy(height: enteranceLocationY, rotation: enteranceLocationTheta)
             monsters.append((mouse,.mouse))
             wrapper.addChildNode(mouse)
             
         case .deer:
-            let deer = Deer(height: enteranceLocationY, rotation: enteranceLocationTheta)
+            let deer = Enemy(height: enteranceLocationY, rotation: enteranceLocationTheta)
             monsters.append((deer,.deer))
             wrapper.addChildNode(deer)
         }
@@ -562,9 +575,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         snakeTail.removeAll()
         monsters.removeAll()
       //  foodArray.removeAll()
-        
-        
-        
+  
     }
     
     func restartGame() {
@@ -643,7 +654,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                     }
                 }
             }
-            
         }
         
         //        else if contact.bodyA.categoryBitMask == 10 && contact.bodyB.categoryBitMask == 1 {
@@ -666,9 +676,5 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         //                }
         //            }
         //        }
-        
-        
-        
     }
-
 }

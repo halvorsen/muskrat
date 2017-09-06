@@ -9,7 +9,7 @@
 import SceneKit
 import GameplayKit
 
-class Butterfly: SCNNode, BrothersUIAutoLayout {
+class Enemy: SCNNode, BrothersUIAutoLayout {
 
     var movementSpeed = Int()
     var color: UIColor = .red
@@ -19,7 +19,9 @@ class Butterfly: SCNNode, BrothersUIAutoLayout {
         let shape = SCNSphere(radius: Global.monsterRadius)
         
         let sphereMaterial = SCNMaterial()
-        sphereMaterial.diffuse.contents = color
+       // sphereMaterial.diffuse.contents = color
+        
+        sphereMaterial.emission.contents = [UIColor.red]
         shape.materials = [sphereMaterial]
         let sphere = SCNNode(geometry: shape)
         sphere.position =  SCNVector3(x: 0, y: 0, z: -3)
@@ -33,6 +35,8 @@ class Butterfly: SCNNode, BrothersUIAutoLayout {
         sphere.physicsBody?.collisionBitMask = 0
         sphere.physicsBody?.contactTestBitMask = CollisionTypes.tail.rawValue | CollisionTypes.head.rawValue
         sphere.position = SCNVector3(x: 0, y: 0, z: -3)
+        
+        
         
         self.position = SCNVector3(x: 0, y: height, z: 0)
         self.rotation = SCNVector4(x:0,y:1,z:0,w:rotation)
