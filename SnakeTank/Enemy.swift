@@ -12,7 +12,7 @@ import GameplayKit
 class Enemy: SCNNode, BrothersUIAutoLayout {
 
     var color: UIColor = .red
-    
+    var actualNode = SCNNode()
     init(height: Float, rotation: Float) {
         super.init()
         let shape = SCNSphere(radius: Global.monsterRadius)
@@ -34,7 +34,7 @@ class Enemy: SCNNode, BrothersUIAutoLayout {
         sphere.physicsBody?.collisionBitMask = 0
         sphere.physicsBody?.contactTestBitMask = CollisionTypes.tail.rawValue | CollisionTypes.head.rawValue
         sphere.position = SCNVector3(x: 0, y: 0, z: -3)
-        
+        actualNode = sphere
         
         
         self.position = SCNVector3(x: 0, y: height, z: 0)
