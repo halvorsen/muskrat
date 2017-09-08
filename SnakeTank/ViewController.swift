@@ -73,6 +73,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
         
         startScene()
+        floatMenu()
     }
     var animationDots = [Enemy]()
     private func startScene() {
@@ -196,37 +197,41 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     }
     private func floatMenu() {
         let nodes = [
-        menuHinge.childNode(withName: "currentScore", recursively: false)!,
-        menuHinge.childNode(withName: "bestScore", recursively: false)!,
+      //  menuHinge.childNode(withName: "currentScore", recursively: false)!,
+      //  menuHinge.childNode(withName: "bestScore", recursively: false)!,
         menuHinge.childNode(withName: "play", recursively: false)!,
-        menuHinge.childNode(withName: "gameCenter", recursively: false)!,
-        menuHinge.childNode(withName: "colorTheme", recursively: false)!]
+      //  menuHinge.childNode(withName: "gameCenter", recursively: false)!,
+      //  menuHinge.childNode(withName: "colorTheme", recursively: false)!
+        ]
         
         for node in nodes {
             floatButton(node: node)
         }
     
     }
-    
+    //REALLY THIS is just moving the play button back and forth right now but could move all buttons, not happy with how it looked in the end
     private func floatButton(node: SCNNode) {
-        let startPosition = node.position
-       
+   
         let actions: [SCNAction] = [
-        SCNAction.move(by: SCNVector3(0,0.1,0), duration: 0.5),
-        SCNAction.move(by: SCNVector3(0.2,0.1,0), duration: 0.5),
-        SCNAction.move(by: SCNVector3(0.1,0.2,-0.3), duration: 0.5),
-        SCNAction.move(by: SCNVector3(0.1,-0.2,-0.0), duration: 0.5)
+        SCNAction.move(by: SCNVector3(0,-0.01,0.09), duration: 0.5),
+      //  SCNAction.move(by: SCNVector3(0,0.1,-0.09), duration: 0.5),
+        SCNAction.move(by: SCNVector3(0,-0.01,0.07), duration: 0.5),
+      //  SCNAction.move(by: SCNVector3(0,0.1,-0.07), duration: 0.5)
         ]
-        let actionFinal = SCNAction.move(to: startPosition, duration: 1.0)
+//        let randomAction = actions[Int(arc4random_uniform(3))]
+//        node.runAction(randomAction)
+        let startPosition = node.position
+        let actionFinal = SCNAction.move(to: startPosition, duration: 1.5)
         let actionAll = SCNAction.repeatForever(SCNAction.rotate(by: .pi*2, around: SCNVector3(0, 1, 0), duration: 0.5))
         var actionSequence = [SCNAction]()
-        for i in 0...8 {
-            let randomAction = actions[Int(arc4random_uniform(3))]
+        for i in 0...1 {
+            let randomAction = actions[Int(arc4random_uniform(2))]
             actionSequence.append(randomAction)
         }
         actionSequence.append(actionFinal)
         let a = SCNAction.sequence(actionSequence)
-        node.runAction(a)
+        let repeatedAction = SCNAction.repeatForever(a)
+        node.runAction(repeatedAction)
     }
     
     override func viewWillAppear(_ animated: Bool) {
