@@ -34,6 +34,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     let foodSize: CGFloat = 3.5
     var snakeHead = SCNNode()
     var snakeHinge = SCNNode()
+    var menuHinge = SCNNode()
+    
 
     @IBOutlet var sceneView: ARSCNView!
     
@@ -56,7 +58,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         score.alpha = 1.0
         score.textAlignment = .center
         score.text = String(Global.points)
-        view.addSubview(score)
+       // view.addSubview(score)
         
         tap.delegate = self
         view.addGestureRecognizer(tap)
@@ -64,6 +66,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         wrapper = scene.rootNode.childNode(withName: "wrapper", recursively: false)!
         snakeHead = wrapper.childNode(withName: "headHinge", recursively: false)!.childNode(withName: "head", recursively: false)!
         snakeHinge = wrapper.childNode(withName: "headHinge", recursively: false)!
+        menuHinge = wrapper.childNode(withName: "menuHinge", recursively: false)!
         
         startScene()
     }
@@ -84,16 +87,26 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(ViewController.goLeft(_:)))
         swipeLeft.direction = .left
 //
-//        for _ in 0...6 {
-//            addFood(value: 2)
-//        }
+        for i in 0...100 {
+            Global.delay(bySeconds: Double(i)*0.3) {
+            self.addMonster(type: .mouse)
+            }
+          
+        }
         //snake tail time
         timer1 = Timer.scheduledTimer(timeInterval: timeInterval, target: self, selector: #selector(ViewController.followFunc), userInfo: nil, repeats: true)
         //monster timer
         timer2 = Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(ViewController.monsterFunc), userInfo: nil, repeats: true)
         //add monster timer
      //   timer3 = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(ViewController.addRandomMonster), userInfo: nil, repeats: true)
-        addTails(amount: 15)
+        //addTails(amount: 15)
+        rotateMenuToFront()
+    }
+    
+    private func rotateMenuToFront() {
+        let action = SCNAction.rotateBy(x: 0, y: CGFloat.pi, z: 0, duration: 2.0)
+        action.timingMode = .easeInEaseOut
+        menuHinge.runAction(action)
     }
     
     func changeScore(amount: Int) {
