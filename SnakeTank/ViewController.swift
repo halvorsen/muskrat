@@ -73,7 +73,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
         
         startScene()
-        floatMenu()
+     //   floatMenu()
     }
     var animationDots = [Enemy]()
     private func startScene() {
