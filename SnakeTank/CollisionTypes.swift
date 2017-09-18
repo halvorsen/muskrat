@@ -9,5 +9,6 @@ enum CollisionTypes: Int {
     case monster = 4
     case bullet = 8
     case wall = 16
+    case food = 32
     
 }

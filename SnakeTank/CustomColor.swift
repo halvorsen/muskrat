@@ -10,6 +10,9 @@ import UIKit
 
 public struct CustomColor {
     
+    public static var colorGreen: UIColor = UIColor(red: 90/255, green: 194/255, blue: 90/255, alpha: 1.0)
+    public static var colorRed: UIColor = UIColor(red: 252/255, green: 60/255, blue: 60/255, alpha: 1.0)
+    
     public static var color2: UIColor = UIColor(red: 252/255, green: 52/255, blue: 104/255, alpha: 1.0)
     public static var color1: UIColor = UIColor(red: 255/255, green: 194/255, blue: 205/255, alpha: 1.0)
     public static var color3: UIColor = UIColor(red: 255/255, green: 147/255, blue: 172/255, alpha: 1.0)

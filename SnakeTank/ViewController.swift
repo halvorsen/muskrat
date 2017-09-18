@@ -42,6 +42,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         myScheme = ColorScheme(rawValue: UserDefaults.standard.integer(forKey: "colorScheme"))
         CustomColor.changeCustomColor(colorScheme: myScheme!)
         // Set the view's delegate
@@ -62,9 +63,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         // view.addSubview(score)
         
         tap.delegate = self
-        //view.addGestureRecognizer(tap)
+
         tapMenu.delegate = self
-        view.addGestureRecognizer(tapMenu)
+
         
         wrapper = scene.rootNode.childNode(withName: "wrapper", recursively: false)!
         snakeHead = wrapper.childNode(withName: "headHinge", recursively: false)!.childNode(withName: "head", recursively: false)!
@@ -73,13 +74,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
         
         startScene()
-     //   floatMenu()
+        //   floatMenu()
     }
     var animationDots = [Enemy]()
     private func startScene() {
         // Create a session configuration
-        let configuration = ARWorldTrackingSessionConfiguration()
-        
+        let configuration = ARWorldTrackingConfiguration()
+        snakeHead.opacity = 0.0
         // Run the view's session
         sceneView.session.run(configuration)
         
@@ -91,13 +92,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         swipeRight.direction = .right
         swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(ViewController.goLeft(_:)))
         swipeLeft.direction = .left
-        //
+        
         for i in 0...100 {
             Global.delay(bySeconds: Double(i)*0.3) {
-                self.animationDots.append(self.addMonster(type: .deer))
-                
+                let asdf = self.addMonster(type: .deer)
+                self.animationDots.append(asdf)
             }
-            
         }
         //snake tail time
         timer1 = Timer.scheduledTimer(timeInterval: timeInterval, target: self, selector: #selector(ViewController.followFunc), userInfo: nil, repeats: true)
@@ -106,6 +106,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
         //addTails(amount: 15)
         rotateMenu(angle:CGFloat.pi)
+        sceneView.scene.physicsWorld.contactDelegate = self
     }
     
     private func rotateMenu(angle: CGFloat) {
@@ -133,7 +134,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         sceneView.addGestureRecognizer(swipeLeft)
         
         tap = UITapGestureRecognizer(target: self, action: #selector(ViewController.fireFunc(_:)))
-        sceneView.addGestureRecognizer(tap)
+      //  sceneView.addGestureRecognizer(tap)
         tapMenu = UITapGestureRecognizer(target: self, action: #selector(ViewController.tapMenuFunc(_:)))
         sceneView.addGestureRecognizer(tapMenu)
     }
@@ -163,6 +164,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     
     private func play() {
         rotateMenu(angle: -CGFloat.pi)
+        snakeHead.opacity = 1.0
         Global.delay(bySeconds: 2.0) {
             self.menuHinge.removeFromParentNode()
         }
@@ -173,6 +175,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             self.addMonster(type: .eagle)
             self.timer3 = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(ViewController.addRandomMonster), userInfo: nil, repeats: true)
         }
+        view.removeGestureRecognizer(tapMenu)
+        sceneView.addGestureRecognizer(tap)
         //add monster timer
         
     }
@@ -195,44 +199,44 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     private func colorTheme() {
         //change colors and IAP
     }
-    private func floatMenu() {
-        let nodes = [
-      //  menuHinge.childNode(withName: "currentScore", recursively: false)!,
-      //  menuHinge.childNode(withName: "bestScore", recursively: false)!,
-        menuHinge.childNode(withName: "play", recursively: false)!,
-      //  menuHinge.childNode(withName: "gameCenter", recursively: false)!,
-      //  menuHinge.childNode(withName: "colorTheme", recursively: false)!
-        ]
-        
-        for node in nodes {
-            floatButton(node: node)
-        }
-    
-    }
+    //    private func floatMenu() {
+    //        let nodes = [
+    //      //  menuHinge.childNode(withName: "currentScore", recursively: false)!,
+    //      //  menuHinge.childNode(withName: "bestScore", recursively: false)!,
+    //        menuHinge.childNode(withName: "play", recursively: false)!,
+    //      //  menuHinge.childNode(withName: "gameCenter", recursively: false)!,
+    //      //  menuHinge.childNode(withName: "colorTheme", recursively: false)!
+    //        ]
+    //
+    //        for node in nodes {
+    //            floatButton(node: node)
+    //        }
+    //
+    //    }
     //REALLY THIS is just moving the play button back and forth right now but could move all buttons, not happy with how it looked in the end
-    private func floatButton(node: SCNNode) {
-   
-        let actions: [SCNAction] = [
-        SCNAction.move(by: SCNVector3(0,-0.01,0.09), duration: 0.5),
-      //  SCNAction.move(by: SCNVector3(0,0.1,-0.09), duration: 0.5),
-        SCNAction.move(by: SCNVector3(0,-0.01,0.07), duration: 0.5),
-      //  SCNAction.move(by: SCNVector3(0,0.1,-0.07), duration: 0.5)
-        ]
-//        let randomAction = actions[Int(arc4random_uniform(3))]
-//        node.runAction(randomAction)
-        let startPosition = node.position
-        let actionFinal = SCNAction.move(to: startPosition, duration: 1.5)
-        let actionAll = SCNAction.repeatForever(SCNAction.rotate(by: .pi*2, around: SCNVector3(0, 1, 0), duration: 0.5))
-        var actionSequence = [SCNAction]()
-        for i in 0...1 {
-            let randomAction = actions[Int(arc4random_uniform(2))]
-            actionSequence.append(randomAction)
-        }
-        actionSequence.append(actionFinal)
-        let a = SCNAction.sequence(actionSequence)
-        let repeatedAction = SCNAction.repeatForever(a)
-        node.runAction(repeatedAction)
-    }
+    //    private func floatButton(node: SCNNode) {
+    //
+    //        let actions: [SCNAction] = [
+    //        SCNAction.move(by: SCNVector3(0,-0.01,0.09), duration: 0.5),
+    //      //  SCNAction.move(by: SCNVector3(0,0.1,-0.09), duration: 0.5),
+    //        SCNAction.move(by: SCNVector3(0,-0.01,0.07), duration: 0.5),
+    //      //  SCNAction.move(by: SCNVector3(0,0.1,-0.07), duration: 0.5)
+    //        ]
+    ////        let randomAction = actions[Int(arc4random_uniform(3))]
+    ////        node.runAction(randomAction)
+    //        let startPosition = node.position
+    //        let actionFinal = SCNAction.move(to: startPosition, duration: 1.5)
+    //        let actionAll = SCNAction.repeatForever(SCNAction.rotate(by: .pi*2, around: SCNVector3(0, 1, 0), duration: 0.5))
+    //        var actionSequence = [SCNAction]()
+    //        for i in 0...1 {
+    //            let randomAction = actions[Int(arc4random_uniform(2))]
+    //            actionSequence.append(randomAction)
+    //        }
+    //        actionSequence.append(actionFinal)
+    //        let a = SCNAction.sequence(actionSequence)
+    //        let repeatedAction = SCNAction.repeatForever(a)
+    //        node.runAction(repeatedAction)
+    //    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -247,7 +251,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         sceneView.session.pause()
     }
     
-    var myGameOverView = GameOverView()
+  
     var once = true
     func gameOver() {
         if once {
@@ -258,9 +262,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                 // GCHelper.sharedInstance.reportLeaderboardIdentifier("highscore123654", score: Global.points)
             }
             
-            myGameOverView = GameOverView(backgroundColor: .black, buttonsColor: .white, bestScore: Global.topScore, thisScore: Global.points, colorScheme: myScheme!, vc: self)
-            
-            view.addSubview(myGameOverView)
+           
+      
             Global.delay(bySeconds: 5.0) {
                 self.once = true
             }
@@ -408,31 +411,50 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     @objc func fireFunc(_ tapOnScreen: UITapGestureRecognizer) {
         print("tap!")
         
-        guard snakeTail.count > 0 else {return}
-        let shotSpeed = duration/6
-        let bullet = Bullet(height: snakeHinge.position.y, rotation: snakeHinge.rotation.y*snakeHinge.rotation.w)
-        wrapper.addChildNode(bullet)
+        var dissappearTime: Double = 0.0
+        
         switch direction! {
         case .up:
+            let bullet = Bullet(height: snakeHinge.position.y + Float(Global.monsterRadius*3/4), rotation: snakeHinge.rotation.y*snakeHinge.rotation.w + 0.01, rotate90: false)
+            wrapper.addChildNode(bullet)
             let distance = 3-snakeHinge.position.y
-            let moveObject = SCNAction.move(by: SCNVector3(0,distance,0), duration: TimeInterval(distance/bulletSpeed))
+            dissappearTime = Double(distance/bulletSpeed)
+            let moveObject = SCNAction.move(by: SCNVector3(0,distance,0), duration: dissappearTime)
             bullet.runAction(moveObject)
-            
+            Global.delay(bySeconds: dissappearTime) {
+                bullet.removeFromParentNode()
+            }
         case .down:
+            let bullet = Bullet(height: snakeHinge.position.y - Float(Global.monsterRadius*3/4), rotation: snakeHinge.rotation.y*snakeHinge.rotation.w + 0.01, rotate90: false)
+            wrapper.addChildNode(bullet)
             let distance = -3 - snakeHinge.position.y
-            let moveObject = SCNAction.move(by: SCNVector3(0,distance,0), duration: TimeInterval(abs(distance)/bulletSpeed))
+            dissappearTime = Double(abs(distance/bulletSpeed))
+            let moveObject = SCNAction.move(by: SCNVector3(0,distance,0), duration: dissappearTime)
             bullet.runAction(moveObject)
+            Global.delay(bySeconds: dissappearTime) {
+                bullet.removeFromParentNode()
+            }
         case .right:
-            let moveObject = SCNAction.rotateBy(x: 0, y: -CGFloat.pi*2, z: 0, duration: duration*3.14*1.5/3)
+            let bullet = Bullet(height: snakeHinge.position.y, rotation: snakeHinge.rotation.y*snakeHinge.rotation.w, rotate90: true)
+            wrapper.addChildNode(bullet)
+            dissappearTime = Double(duration*3.14*1.5/20)
+            let moveObject = SCNAction.rotateBy(x: 0, y: -CGFloat.pi, z: 0, duration: dissappearTime)
             bullet.runAction(moveObject)
+            Global.delay(bySeconds: dissappearTime) {
+                bullet.removeFromParentNode()
+            }
         case .left:
-            let moveObject = SCNAction.rotateBy(x: 0, y: CGFloat.pi*2, z: 0, duration: duration*3.14*1.5/3)
+            let bullet = Bullet(height: snakeHinge.position.y, rotation: snakeHinge.rotation.y*snakeHinge.rotation.w + 0.03, rotate90: true)
+            wrapper.addChildNode(bullet)
+            dissappearTime = Double(duration*3.14*1.5/20)
+            let moveObject = SCNAction.rotateBy(x: 0, y: CGFloat.pi, z: 0, duration: dissappearTime)
             bullet.runAction(moveObject)
+            Global.delay(bySeconds: dissappearTime) {
+                bullet.removeFromParentNode()
+            }
         default:
             break
         }
-        
-        
     }
     
     let timeInterval = 0.05
@@ -447,9 +469,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             let moveObject = SCNAction.move(to: snakeTail[i-1].position, duration: trailTime)
             snakeTail[i].runAction(moveObject)
         }
-        //let _position = snakeHead.position
+
         let globalPositionOfSnakeHead = snakeHinge.convertPosition(snakeHead.position, to: wrapper)
-        // let moveObject = SCNAction.move(to: snakeHead.position, duration: trailTime + 0.01)
         let moveObject = SCNAction.move(to: SCNVector3(x: globalPositionOfSnakeHead.x , y: globalPositionOfSnakeHead.y , z: globalPositionOfSnakeHead.z ), duration: trailTime + 0.01)
         snakeTail[0].runAction(moveObject)
         
@@ -484,7 +505,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     @objc private func goRight(_ swipe: UISwipeGestureRecognizer?) {
         print("swiperight")
         snakeHinge.removeAllActions()
-        let moveObject = SCNAction.rotateBy(x: 0, y: -CGFloat.pi*2, z: 0, duration: duration*3.14*1.5)
+        let _moveObject = SCNAction.rotateBy(x: 0, y: -CGFloat.pi*2, z: 0, duration: duration*3.14*1.5)
+        let moveObject = SCNAction.repeatForever(_moveObject)
         snakeHinge.runAction(moveObject)
         if direction == .left {
             snakeHinge.removeAllActions()
@@ -495,7 +517,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     @objc private func goLeft(_ swipe: UISwipeGestureRecognizer?) {
         print("swipeleft")
         snakeHinge.removeAllActions()
-        let moveObject = SCNAction.rotateBy(x: 0, y: CGFloat.pi*2, z: 0, duration: duration*3.14*1.5)
+        let _moveObject = SCNAction.rotateBy(x: 0, y: CGFloat.pi*2, z: 0, duration: duration*3.14*1.5)
+        let moveObject = SCNAction.repeatForever(_moveObject)
         snakeHinge.runAction(moveObject)
         if direction == .right {
             snakeHinge.removeAllActions()
@@ -620,9 +643,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             }
         }
     }
-    
-    
-    
+ 
     func chooseRandomEnterance() -> (y:Float,rotation:Float) {
         let random = arc4random_uniform(8)
         var y = Float()
@@ -732,11 +753,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         print("A: \(contact.nodeA.physicsBody!.categoryBitMask)")
         print("B: \(contact.nodeB.physicsBody!.categoryBitMask)")
         
-        if contact.nodeA.physicsBody!.categoryBitMask == CollisionTypes.head.rawValue && contact.nodeB.physicsBody!.categoryBitMask == CollisionTypes.monster.rawValue {
-            // monster gotchya
-            print("ate monster!")
+        if contact.nodeA.physicsBody!.categoryBitMask == CollisionTypes.head.rawValue && contact.nodeB.physicsBody!.categoryBitMask == CollisionTypes.food.rawValue {
+            // ate food
+            print("ate food!")
             if let item = contact.nodeB as? SCNNode {
                 item.removeFromParentNode()
+                addTails(amount: 1)
                 loop: for i in 0..<monsters.count {
                     if item == monsters[i].0 {
                         
@@ -769,11 +791,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             gameOver()
             resetGame()
             
-        } else if contact.nodeA.physicsBody!.categoryBitMask == CollisionTypes.bullet.rawValue && contact.nodeB.physicsBody!.categoryBitMask == CollisionTypes.monster.rawValue {
+        } else if contact.nodeA.physicsBody!.categoryBitMask == CollisionTypes.monster.rawValue && contact.nodeB.physicsBody!.categoryBitMask == CollisionTypes.bullet.rawValue {
             // monster gotchya
             print("shot monster!")
-            if let item = contact.nodeB as? SCNNode {
-                item.removeFromParentNode()
+            if let item = contact.nodeA as? SCNNode {
+                print("if let")
+                item.physicsBody?.categoryBitMask = CollisionTypes.food.rawValue
+                item.geometry?.firstMaterial?.diffuse.contents = CustomColor.colorGreen
+//                item.physicsBody?.contactTestBitMask = 1
                 loop: for i in 0..<monsters.count {
                     if item == monsters[i].0 {
                         
@@ -807,3 +832,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         //        }
     }
 }
+
+//materialPreviewWidget.material.fresnelExponent = fresnelExponentSlider.value
+//materialPreviewWidget.material.shininess = shininessSlider.value
+//materialPreviewWidget.material.transparency = transparencySlider.value
+//
+//materialPreviewWidget.material.specular.contents = specularSegmentedControl.value
+//materialPreviewWidget.material.diffuse.contents = diffuseSegmentedControl.value
+//materialPreviewWidget.material.reflective.contents = reflectiveSegmentedControl.value
+//materialPreviewWidget.material.normal.contents = normalSegmentedControl.value
+
+
