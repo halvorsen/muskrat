@@ -34,16 +34,16 @@ class Bullet: SCNNode, BrothersUIAutoLayout {
         sphere.physicsBody?.collisionBitMask = 0
         sphere.physicsBody?.contactTestBitMask = 0
       
-        
         if rotate90 {
             sphere.rotation = SCNVector4(0,0,1,Float.pi/2)
         }
         
         self.position = SCNVector3(x: 0, y: height, z: 0)
-      
-        self.rotation = SCNVector4(x:0,y:1,z:0,w:rotation)
         
-        self.addChildNode(sphere)
+        let innerNode = SCNNode()
+        self.addChildNode(innerNode)
+        innerNode.rotation = SCNVector4(x:0,y:1,z:0,w:rotation)
+        innerNode.addChildNode(sphere)
         
     }
     
