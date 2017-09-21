@@ -680,6 +680,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             }
         }
     }
+    func chooseRandomFruit() -> UIImage {
+        return fruit.image[Int(arc4random_uniform(6))]
+    }
     
     func chooseRandomEnterance() -> (y:Float,rotation:Float) {
         let random = arc4random_uniform(8)
@@ -802,7 +805,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     //    }
     var canGoDown : Bool = true
     var canGoUp : Bool = true
-    
+    let fruit = Fruit()
     func physicsWorld(_ world: SCNPhysicsWorld, didBegin contact: SCNPhysicsContact) {
         print("didbegin")
         print("A: \(contact.nodeA.physicsBody!.categoryBitMask)")
@@ -849,13 +852,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             resetGame()
             
         } else if contact.nodeA.physicsBody!.categoryBitMask == CollisionTypes.monster.rawValue && contact.nodeB.physicsBody!.categoryBitMask == CollisionTypes.bullet.rawValue {
-            // monster gotchya
+            // shot monster
             print("shot monster!")
             if let item = contact.nodeA as? SCNNode {
-                print("if let")
+//                var _item = item
+//                _item = SCNNode(geometry: SCNSphere(radius: Global.monsterRadius*2))
+                item.geometry = SCNPlane(width: 2*Global.monsterRadius, height: 2*Global.monsterRadius)
                 item.physicsBody?.categoryBitMask = CollisionTypes.food.rawValue
-                //        item.geometry?.firstMaterial?.diffuse.contents = CustomColor.colorGreen
-                //                item.physicsBody?.contactTestBitMask = 1
+                item.geometry?.firstMaterial?.diffuse.contents = chooseRandomFruit()
+                
                 loop: for i in 0..<monsters.count {
                     if item == monsters[i].0 {
                         

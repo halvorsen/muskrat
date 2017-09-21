@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		063A025C1F746D2B00E530D5 /* Fruit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 063A025B1F746D2B00E530D5 /* Fruit.swift */; };
 		A933B2271F5799130096F5EA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A933B2261F5799130096F5EA /* AppDelegate.swift */; };
 		A933B2291F5799130096F5EA /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = A933B2281F5799130096F5EA /* art.scnassets */; };
 		A933B22B1F5799130096F5EA /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A933B22A1F5799130096F5EA /* ViewController.swift */; };
@@ -30,6 +31,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		063A025B1F746D2B00E530D5 /* Fruit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fruit.swift; sourceTree = "<group>"; };
 		A933B2231F5799130096F5EA /* SnakeTank.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SnakeTank.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A933B2261F5799130096F5EA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A933B2281F5799130096F5EA /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
@@ -93,6 +95,7 @@
 				A939E3D91F5E24BA00ACF55D /* Menu */,
 				A933B2281F5799130096F5EA /* art.scnassets */,
 				A933B22A1F5799130096F5EA /* ViewController.swift */,
+				063A025B1F746D2B00E530D5 /* Fruit.swift */,
 				A933B22C1F5799130096F5EA /* Main.storyboard */,
 				A933B22F1F5799130096F5EA /* Assets.xcassets */,
 				A933B2311F5799130096F5EA /* LaunchScreen.storyboard */,
@@ -203,6 +206,7 @@
 				A97239AE1F5E02D9000519EB /* Enemy.swift in Sources */,
 				A97239A71F5E02D9000519EB /* MenuButtons.swift in Sources */,
 				A97239B21F5E02D9000519EB /* Dot.swift in Sources */,
+				063A025C1F746D2B00E530D5 /* Fruit.swift in Sources */,
 				A97239A91F5E02D9000519EB /* Zombie.swift in Sources */,
 				A97239B01F5E02D9000519EB /* UIProtocolExtentions.swift in Sources */,
 				A9F4BE711F5E4C8100A02837 /* CollisionTypes.swift in Sources */,
