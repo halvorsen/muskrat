@@ -15,10 +15,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     let cover = UIView()
     var score = UILabel()
     var scoreInt = Int() {didSet{score.text = String(scoreInt); Global.points = scoreInt}}
-    
+    var myColor = CustomColor.color2
     let instructionLabel = UILabel()
     var timer = Timer()
-    var myScheme: ColorScheme?
+    var myScheme = 1
     var wrapper = SCNNode()
     var snakeTail = [SCNNode]()
     var timer1 = Timer()
@@ -42,9 +42,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        myScheme = ColorScheme(rawValue: UserDefaults.standard.integer(forKey: "colorScheme"))
-        CustomColor.changeCustomColor(colorScheme: myScheme!)
+        let index = UserDefaults.standard.integer(forKey: "MuskratColorTheme")
+        myColor = CustomColor.colors[index]
+       
         // Set the view's delegate
         sceneView.delegate = self
         
@@ -76,11 +76,30 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         startScene()
         //   floatMenu()
     }
+    
+    private func setColors() {
+        snakeHead.geometry?.firstMaterial?.diffuse.contents = myColor
+        let nodes = [
+        menuHinge.childNode(withName: "currentScore", recursively: false)!,
+        menuHinge.childNode(withName: "bestScore", recursively: false)!,
+        menuHinge.childNode(withName: "box1", recursively: false)!,
+        menuHinge.childNode(withName: "box2", recursively: false)!,
+        menuHinge.childNode(withName: "box3", recursively: false)!
+        ]
+        for node in nodes {
+            node.geometry?.firstMaterial?.selfIllumination.contents = myColor
+            node.geometry?.firstMaterial?.multiply.contents = myColor
+        }
+        
+        
+    }
+    
     var animationDots = [Enemy]()
     private func startScene() {
         // Create a session configuration
         let configuration = ARWorldTrackingConfiguration()
-        snakeHead.geometry?.firstMaterial?.diffuse.contents = CustomColor.colorGreen
+        setColors()
+        
         snakeHead.opacity = 0.0
         // Run the view's session
         sceneView.session.run(configuration)
@@ -211,47 +230,37 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     }
     
     private func colorTheme() {
-        //change colors and IAP
+        print("colortheme")
+        switch myColor {
+        case CustomColor.color1: myColor = CustomColor.color2
+            UserDefaults.standard.set(1, forKey: "MuskratColorTheme")
+            CustomColor.current = 1
+        case CustomColor.color2: myColor = CustomColor.color3
+            UserDefaults.standard.set(2, forKey: "MuskratColorTheme")
+            CustomColor.current = 2
+        case CustomColor.color3: myColor = CustomColor.color4
+            UserDefaults.standard.set(3, forKey: "MuskratColorTheme")
+            CustomColor.current = 3
+        case CustomColor.color4: myColor = CustomColor.color5
+            UserDefaults.standard.set(4, forKey: "MuskratColorTheme")
+            CustomColor.current = 4
+        case CustomColor.color5: myColor = CustomColor.color6
+            UserDefaults.standard.set(5, forKey: "MuskratColorTheme")
+            CustomColor.current = 5
+        case CustomColor.color6: myColor = CustomColor.color7
+            UserDefaults.standard.set(6, forKey: "MuskratColorTheme")
+            CustomColor.current = 6
+        case CustomColor.color7: myColor = CustomColor.color8
+            UserDefaults.standard.set(7, forKey: "MuskratColorTheme")
+            CustomColor.current = 7
+        case CustomColor.color8: myColor = CustomColor.color1
+            UserDefaults.standard.set(0, forKey: "MuskratColorTheme")
+            CustomColor.current = 0
+        default: break
+        }
+        setColors()
     }
-    //    private func floatMenu() {
-    //        let nodes = [
-    //      //  menuHinge.childNode(withName: "currentScore", recursively: false)!,
-    //      //  menuHinge.childNode(withName: "bestScore", recursively: false)!,
-    //        menuHinge.childNode(withName: "play", recursively: false)!,
-    //      //  menuHinge.childNode(withName: "gameCenter", recursively: false)!,
-    //      //  menuHinge.childNode(withName: "colorTheme", recursively: false)!
-    //        ]
-    //
-    //        for node in nodes {
-    //            floatButton(node: node)
-    //        }
-    //
-    //    }
-    //REALLY THIS is just moving the play button back and forth right now but could move all buttons, not happy with how it looked in the end
-    //    private func floatButton(node: SCNNode) {
-    //
-    //        let actions: [SCNAction] = [
-    //        SCNAction.move(by: SCNVector3(0,-0.01,0.09), duration: 0.5),
-    //      //  SCNAction.move(by: SCNVector3(0,0.1,-0.09), duration: 0.5),
-    //        SCNAction.move(by: SCNVector3(0,-0.01,0.07), duration: 0.5),
-    //      //  SCNAction.move(by: SCNVector3(0,0.1,-0.07), duration: 0.5)
-    //        ]
-    ////        let randomAction = actions[Int(arc4random_uniform(3))]
-    ////        node.runAction(randomAction)
-    //        let startPosition = node.position
-    //        let actionFinal = SCNAction.move(to: startPosition, duration: 1.5)
-    //        let actionAll = SCNAction.repeatForever(SCNAction.rotate(by: .pi*2, around: SCNVector3(0, 1, 0), duration: 0.5))
-    //        var actionSequence = [SCNAction]()
-    //        for i in 0...1 {
-    //            let randomAction = actions[Int(arc4random_uniform(2))]
-    //            actionSequence.append(randomAction)
-    //        }
-    //        actionSequence.append(actionFinal)
-    //        let a = SCNAction.sequence(actionSequence)
-    //        let repeatedAction = SCNAction.repeatForever(a)
-    //        node.runAction(repeatedAction)
-    //    }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -517,7 +526,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     var direction: Facing? = .up
     var duration: Double = 5
     @objc private func goUp(_ swipe: UISwipeGestureRecognizer?) {
-        print("swipeup")
+        canGoDown = true
         snakeHinge.removeAllActions()
         let moveObject = SCNAction.move(by: SCNVector3(0,4,0), duration: duration)
         snakeHinge.runAction(moveObject)
@@ -528,6 +537,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     }
     @objc private func goDown(_ swipe: UISwipeGestureRecognizer?) {
         print("swipedown")
+        canGoUp = true
         snakeHinge.removeAllActions()
         let moveObject = SCNAction.move(by: SCNVector3(0,-4,-0), duration: duration)
         snakeHinge.runAction(moveObject)
@@ -781,7 +791,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
 //        timer1.fire();timer2.fire();timer3.fire()
 //
 //    }
-    
+    var canGoDown : Bool = true
+    var canGoUp : Bool = true
     
     func physicsWorld(_ world: SCNPhysicsWorld, didBegin contact: SCNPhysicsContact) {
         print("didbegin")
@@ -808,6 +819,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             //hit wall
             print("hit wall")
             if direction == .up {
+                canGoUp = false
            goDown(nil)
             }
             
@@ -815,6 +827,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             //hit wall
             print("hit wall")
             if direction == .down {
+                canGoDown = false
             goUp(nil)
             }
             
@@ -830,7 +843,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             if let item = contact.nodeA as? SCNNode {
                 print("if let")
                 item.physicsBody?.categoryBitMask = CollisionTypes.food.rawValue
-                item.geometry?.firstMaterial?.diffuse.contents = CustomColor.colorGreen
+        //        item.geometry?.firstMaterial?.diffuse.contents = CustomColor.colorGreen
 //                item.physicsBody?.contactTestBitMask = 1
                 loop: for i in 0..<monsters.count {
                     if item == monsters[i].0 {

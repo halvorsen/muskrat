@@ -24,7 +24,7 @@ class Enemy: SCNNode, BrothersUIAutoLayout {
         sphereMaterial.transparency = 1.0
         
         //            sphereMaterial.specular.contents = materialColor
-        sphereMaterial.diffuse.contents = CustomColor.colorRed
+        sphereMaterial.diffuse.contents = CustomColor.colors[CustomColor.current]
         //            sphereMaterial.reflective.contents = materialColor
         //            sphereMaterial.normal.contents = materialColor
         //            sphereMaterial.selfIllumination.contents = materialColor
