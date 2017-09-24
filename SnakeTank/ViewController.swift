@@ -30,13 +30,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     var swipeRight = UISwipeGestureRecognizer()
     var tap = UITapGestureRecognizer()
     var tapMenu = UITapGestureRecognizer()
-    var foodArray = [SCNNode]()
-    // var foodLabels = [SCNLabelNode]()
     let foodSize: CGFloat = 3.5
     var snakeHead = SCNNode()
     var snakeHinge = SCNNode()
     var menuHinge = SCNNode()
-    
+    var muskrat = SCNNode()
     
     @IBOutlet var sceneView: ARSCNView!
     
@@ -69,26 +67,36 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
         wrapper = scene.rootNode.childNode(withName: "wrapper", recursively: false)!
         snakeHead = wrapper.childNode(withName: "headHinge", recursively: false)!.childNode(withName: "head", recursively: false)!
+        //  snakeHead.geometry = SCNSphere(radius: Global.monsterRadius*1.8)
         snakeHinge = wrapper.childNode(withName: "headHinge", recursively: false)!
         menuHinge = wrapper.childNode(withName: "menuHinge", recursively: false)!
-        
-        
+        muskrat = menuHinge.childNode(withName: "muskrat", recursively: false)!
+        muskrat.geometry?.firstMaterial?.diffuse.contents = #imageLiteral(resourceName: "AaronArtboard3")
         startScene()
         //   floatMenu()
     }
     
     private func setColors() {
         snakeHead.geometry?.firstMaterial?.diffuse.contents = myColor
+        //      snakeHead.geometry?.firstMaterial?.selfIllumination.contents = myColor
+        for i in 0..<CustomColor.colors.count {
+            if myColor == CustomColor.colors[i] {
+                CustomColor.current = i
+                muskrat.geometry?.firstMaterial?.diffuse.contents = CustomColor.muskrats[i]
+            }
+        }
         let nodes = [
             menuHinge.childNode(withName: "currentScore", recursively: false)!,
             menuHinge.childNode(withName: "bestScore", recursively: false)!,
             menuHinge.childNode(withName: "box1", recursively: false)!,
             menuHinge.childNode(withName: "box2", recursively: false)!,
-            menuHinge.childNode(withName: "box3", recursively: false)!
-        ]
+            menuHinge.childNode(withName: "box3", recursively: false)!,
+            
+            ]
         for node in nodes {
-            node.geometry?.firstMaterial?.selfIllumination.contents = myColor
-            node.geometry?.firstMaterial?.multiply.contents = myColor
+            node.geometry?.firstMaterial?.diffuse.contents = myColor
+            //        node.geometry?.firstMaterial?.selfIllumination.contents = myColor
+            //      node.geometry?.firstMaterial?.multiply.contents = myColor
         }
         
         
@@ -112,20 +120,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         swipeRight.direction = .right
         swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(ViewController.goLeft(_:)))
         swipeLeft.direction = .left
-        
-        //        for i in 0...100 {
-        //            Global.delay(bySeconds: Double(i)*0.3) {
-        //                let asdf = self.addMonster(type: .deer)
-        //                self.animationDots.append(asdf)
-        //            }
-        //        }
-        //snake tail time
-        
-        //monster timer
-        //        timer2 = Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(ViewController.addRandomMonster), userInfo: nil, repeats: true)
-        
-        
-        //addTails(amount: 15)
         rotateMenu(angle:CGFloat.pi)
         sceneView.scene.physicsWorld.contactDelegate = self
     }
@@ -169,13 +163,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         for result in results {
             if let name = result.node.name {
                 
-                if name == "play" {
+                if name == "box1" {
                     play()
                     return
-                } else if name == "gameCenter" {
+                } else if name == "box2" {
                     gameCenter()
                     return
-                } else if name == "colorTheme" {
+                } else if name == "box3" {
                     colorTheme()
                     return
                 }
@@ -190,23 +184,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             self.menuHinge.removeFromParentNode()
         }
         animation() {
-            print("exited animation")
-            //            self.addMonster(type: .zombie)
-            //            self.addMonster(type: .butterfly)
-            //            self.addMonster(type: .mouse)
-            //            self.addMonster(type: .eagle)
-            //            self.timer3 = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(ViewController.addRandomMonster), userInfo: nil, repeats: true)
+            
             self.timer3 = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true, block: {_ in self.addMonster(type: .deer)})
         }
         self.timer2 = Timer.scheduledTimer(timeInterval: deerDuration, target: self, selector: #selector(ViewController.monsterFunc), userInfo: nil, repeats: true)
         self.timer1 = Timer.scheduledTimer(timeInterval: timeInterval, target: self, selector: #selector(ViewController.followFunc), userInfo: nil, repeats: true)
         
-        //        for i in 0...100 {
-        //            Global.delay(bySeconds: Double(i)*0.3) {
-        //                let asdf = self.addMonster(type: .deer)
-        //                self.animationDots.append(asdf)
-        //            }
-        //        }
         sceneView.removeGestureRecognizer(tapMenu)
         sceneView.addGestureRecognizer(tap)
         //add monster timer
@@ -250,13 +233,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         case CustomColor.color6: myColor = CustomColor.color7
         UserDefaults.standard.set(6, forKey: "MuskratColorTheme")
         CustomColor.current = 6
-        case CustomColor.color7: myColor = CustomColor.color8
-        UserDefaults.standard.set(7, forKey: "MuskratColorTheme")
-        CustomColor.current = 7
-        case CustomColor.color8: myColor = CustomColor.color1
+        case CustomColor.color7: myColor = CustomColor.color1
         UserDefaults.standard.set(0, forKey: "MuskratColorTheme")
         CustomColor.current = 0
-        default: break
+            
+        default:
+            myColor = CustomColor.color1
+            UserDefaults.standard.set(0, forKey: "MuskratColorTheme")
+            CustomColor.current = 0
         }
         setColors()
     }
@@ -303,35 +287,31 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             rotateMenu(angle: -CGFloat.pi)
             snakeHead.opacity = 1.0
             snakeHinge.eulerAngles.y = 0
+            snakeHinge.position = SCNVector3(0,1,0)
             snakeHinge.removeAllActions()
             Global.delay(bySeconds: 5.0) {
                 self.once = true
             }
+            resetGame()
         }
     }
     
     private func addSphere() {
         
-        let shape = SCNSphere(radius: Global.monsterRadius)
-        
-        let sphereMaterial = SCNMaterial()
-        sphereMaterial.emission.contents = [UIColor.black]
-        sphereMaterial.selfIllumination.contents = [UIColor.blue]
-        sphereMaterial.reflective.contents = [UIColor.black]
-        // sphereMaterial.
-        shape.materials = [sphereMaterial]
+        let shape = SCNSphere(radius: Global.monsterRadius*1.3)
+ 
         let sphere = SCNNode(geometry: shape)
-        sphere.position =  SCNVector3(x: 0, y: 0, z: 0)
-        let physShape = SCNPhysicsShape(geometry: shape, options: nil)
+        sphere.position =  SCNVector3(x: 0, y: -2, z: 0)
+        let physShape = SCNPhysicsShape(geometry: SCNSphere(radius: Global.monsterRadius*1.3), options: nil)
         
         let sphereBodys = SCNPhysicsBody(type: .kinematic, shape: physShape)
+        
         sphere.physicsBody = sphereBodys
         
         sphere.physicsBody?.isAffectedByGravity = false
         sphere.physicsBody?.categoryBitMask = CollisionTypes.tail.rawValue
         sphere.physicsBody?.collisionBitMask = 0
-        //  sphere.physicsBody?.contactTestBitMask = 5 | 25
-        sphere.position = SCNVector3(x: 0, y: 0, z: 0)
+        
         wrapper.addChildNode(sphere)
         snakeTail.append(sphere)
         
@@ -395,35 +375,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         // Reset tracking and/or remove existing anchors if consistent tracking is required
         
     }
-    
-    //    private func addFood(value: Int) {
-    //        let randomX = CGFloat(arc4random_uniform(370))*sw
-    //        let randomY = CGFloat(arc4random_uniform(662))*sh
-    //        let rect = CGRect(x: 0, y: 0, width: foodSize*ballRadius*sw, height: foodSize*ballRadius*sw)
-    //        let food = SKShapeNode(rect: rect, cornerRadius: sw)
-    //
-    //        food.position = CGPoint(x: randomX, y: randomY)
-    //        food.physicsBody = SKPhysicsBody(edgeLoopFrom: rect)
-    //        food.physicsBody?.categoryBitMask = 10
-    //        food.physicsBody?.collisionBitMask = 0
-    //
-    //
-    //        food.zPosition = 10000
-    //
-    //        let myLabel = SKLabelNode(fontNamed:"HelveticaNeue-Bold")
-    //        myLabel.text = String(value)
-    //        myLabel.fontSize = 7*fontSizeMultiplier
-    //        myLabel.horizontalAlignmentMode = .center
-    //        myLabel.verticalAlignmentMode = .center
-    //        myLabel.position = CGPoint(x: 0.5*foodSize*ballRadius*sw, y: foodSize*ballRadius*sw/2)
-    //        myLabel.zPosition = 10001
-    //        myLabel.fontColor = .white
-    //        foodArray.append(food)
-    //        foodLabels.append(myLabel)
-    //
-    //        food.addChild(myLabel)
-    //        addChild(food)
-    //    }
+
     
     let monsterDictionary : [Int:Monster] = [
         0:.zombie,
@@ -503,7 +455,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     }
     
     let timeInterval = 0.05
-    let trailTime = 0.05
+    let trailTime = 0.13
     let snakeSpeed: Float = 1200
     let ballRadius: Float = 1
     @objc func followFunc() {
@@ -516,7 +468,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         }
         
         let globalPositionOfSnakeHead = snakeHinge.convertPosition(snakeHead.position, to: wrapper)
-        let moveObject = SCNAction.move(to: SCNVector3(x: globalPositionOfSnakeHead.x , y: globalPositionOfSnakeHead.y , z: globalPositionOfSnakeHead.z ), duration: trailTime + 0.01)
+        let moveObject = SCNAction.move(to: SCNVector3(x: globalPositionOfSnakeHead.x , y: globalPositionOfSnakeHead.y , z: globalPositionOfSnakeHead.z ), duration: trailTime + 0.08)
         snakeTail[0].runAction(moveObject)
         
     }
@@ -574,7 +526,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         direction = .left
         
     }
-
+    
     
     
     private func addTails(amount: Int) {
@@ -681,15 +633,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         }
     }
     func chooseRandomFruit() -> UIImage {
-        return fruit.image[Int(arc4random_uniform(6))]
+        return fruit.image[Int(arc4random_uniform(5))]
     }
     
     func chooseRandomEnterance() -> (y:Float,rotation:Float) {
         let random = arc4random_uniform(8)
         var y = Float()
         var rotation = Float()
-//        rotation = 5.6
-//        y = 2
+        
         switch random {
         case 0:
             rotation = 0.7
@@ -715,7 +666,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         default:
             rotation = 5.6
             y = 0
-
+            
         }
         print("rotation:\(rotation)")
         print("snakeHinge.rotation.w: \(snakeHinge.rotation.w)")
@@ -733,43 +684,59 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         }
         return (y,rotation)
     }
-    
+    var gold = 1
     var monsters = [(SCNNode,Monster)]()
+    var isGold = [Bool]()
     func addMonster(type: Monster) -> Enemy {
         let (enteranceLocationY,enteranceLocationTheta) = chooseRandomEnterance()
         switch type {
         case .zombie:
             let zombie = Enemy(height: enteranceLocationY, rotation: enteranceLocationTheta)
             monsters.append((zombie,.zombie))
+            isGold.append(false)
             wrapper.addChildNode(zombie)
             return zombie
         case .eagle:
             let eagle = Enemy(height: enteranceLocationY, rotation: enteranceLocationTheta)
             monsters.append((eagle,.eagle))
+            isGold.append(false)
             wrapper.addChildNode(eagle)
             return eagle
         case .butterfly:
             let butterfly = Enemy(height: enteranceLocationY, rotation: enteranceLocationTheta)
             monsters.append((butterfly,.butterfly))
+            isGold.append(false)
             wrapper.addChildNode(butterfly)
             return butterfly
         case .tiger:
             let tiger = Enemy(height: enteranceLocationY, rotation: enteranceLocationTheta)
             monsters.append((tiger,.tiger))
+            isGold.append(false)
             wrapper.addChildNode(tiger)
             return tiger
         case .mouse:
             let mouse = Enemy(height: enteranceLocationY, rotation: enteranceLocationTheta)
             monsters.append((mouse,.mouse))
+            isGold.append(false)
             wrapper.addChildNode(mouse)
             return mouse
         case .deer:
             let deer = Enemy(height: enteranceLocationY, rotation: enteranceLocationTheta)
+            gold += 1
+//            deer.actualNode.geometry?.firstMaterial?.diffuse.contents = CustomColor.color8
+         //   deer.geometry?.materials = snakeHead.geometry!.materials
+            
             monsters.append((deer,.deer))
             wrapper.addChildNode(deer)
+            if gold%40 == 0 {
+                deer.actualNode.geometry?.firstMaterial?.diffuse.contents = CustomColor.color8
+                isGold.append(true)
+            } else {
+                isGold.append(false)
+            }
             return deer
         }
-        //        self.animationDots.append(asdf)
+        
     }
     
     private func resetGame() {
@@ -780,36 +747,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
         snakeTail.removeAll()
         monsters.removeAll()
-        
-        //  foodArray.removeAll()
-        
+        isGold.removeAll()
     }
     
-    //    func restartGame() {
-    //
-    //        myScheme = ColorScheme(rawValue: UserDefaults.standard.integer(forKey: "colorScheme"))
-    //        CustomColor.changeCustomColor(colorScheme: myScheme!)
-    //
-    //        // Create a new scene
-    //        let scene = SCNScene(named: "art.scnassets/snake.scn")!
-    //
-    //        // Set the scene to the view
-    //        sceneView.scene = scene
-    //
-    //        wrapper = scene.rootNode.childNode(withName: "wrapper", recursively: false)!
-    //        snakeHead = wrapper.childNode(withName: "headHinge", recursively: false)!.childNode(withName: "head", recursively: false)!
-    //        snakeHinge = wrapper.childNode(withName: "headHinge", recursively: false)!
-    //
-    //        timer1.fire();timer2.fire();timer3.fire()
-    //
-    //    }
     var canGoDown : Bool = true
     var canGoUp : Bool = true
     let fruit = Fruit()
     func physicsWorld(_ world: SCNPhysicsWorld, didBegin contact: SCNPhysicsContact) {
-        print("didbegin")
-        print("A: \(contact.nodeA.physicsBody!.categoryBitMask)")
-        print("B: \(contact.nodeB.physicsBody!.categoryBitMask)")
         
         if contact.nodeA.physicsBody!.categoryBitMask == CollisionTypes.head.rawValue && contact.nodeB.physicsBody!.categoryBitMask == CollisionTypes.food.rawValue {
             // ate food
@@ -817,6 +761,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             if let item = contact.nodeB as? SCNNode {
                 item.removeFromParentNode()
                 addTails(amount: 1)
+                if item.geometry?.firstMaterial?.diffuse.contents as? UIImage == #imageLiteral(resourceName: "grape") {
+                    addTails(amount: 9)
+                }
                 loop: for i in 0..<monsters.count {
                     if item == monsters[i].0 {
                         
@@ -849,59 +796,33 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             // monster gotchya
             print("monster attack!")
             gameOver()
-            resetGame()
+            
             
         } else if contact.nodeA.physicsBody!.categoryBitMask == CollisionTypes.monster.rawValue && contact.nodeB.physicsBody!.categoryBitMask == CollisionTypes.bullet.rawValue {
             // shot monster
             print("shot monster!")
             if let item = contact.nodeA as? SCNNode {
-//                var _item = item
-//                _item = SCNNode(geometry: SCNSphere(radius: Global.monsterRadius*2))
+                
                 item.geometry = SCNPlane(width: 2*Global.monsterRadius, height: 2*Global.monsterRadius)
                 item.physicsBody?.categoryBitMask = CollisionTypes.food.rawValue
-                item.geometry?.firstMaterial?.diffuse.contents = chooseRandomFruit()
-                
+                item.geometry?.firstMaterial?.diffuse.intensity = 1.0
+                item.constraints = [SCNBillboardConstraint()]
                 loop: for i in 0..<monsters.count {
                     if item == monsters[i].0 {
                         
-                        monsters.remove(at: i)
+                        if isGold[i] {
+                            item.geometry?.firstMaterial?.diffuse.contents = #imageLiteral(resourceName: "grape")
+                        } else {
+                            item.geometry?.firstMaterial?.diffuse.contents = chooseRandomFruit()
+                        }
                         
+                        monsters.remove(at: i)
+                        isGold.remove(at: i)
                         break loop
                     }
                 }
             }
         }
-        
-        //        else if contact.bodyA.categoryBitMask == 10 && contact.bodyB.categoryBitMask == 1 {
-        //
-        //            // head hit food
-        //            print("EAT")
-        //            if let item = contact.bodyA.node as? SKShapeNode {
-        //                item.removeFromParent()
-        //                loop: for i in 0..<foodArray.count {
-        //                    if item == foodArray[i] {
-        //                        let amount = Int(foodLabels[i].text!)!
-        //                        delegateRefresh?.changeScore(amount: amount)
-        //                        foodArray.remove(at: i)
-        //                        foodLabels.remove(at: i)
-        //                        addTails(amount: amount)
-        //
-        //                        delayAdd()
-        //                        break loop
-        //                    }
-        //                }
-        //            }
-        //        }
     }
 }
-
-//materialPreviewWidget.material.fresnelExponent = fresnelExponentSlider.value
-//materialPreviewWidget.material.shininess = shininessSlider.value
-//materialPreviewWidget.material.transparency = transparencySlider.value
-//
-//materialPreviewWidget.material.specular.contents = specularSegmentedControl.value
-//materialPreviewWidget.material.diffuse.contents = diffuseSegmentedControl.value
-//materialPreviewWidget.material.reflective.contents = reflectiveSegmentedControl.value
-//materialPreviewWidget.material.normal.contents = normalSegmentedControl.value
-
 

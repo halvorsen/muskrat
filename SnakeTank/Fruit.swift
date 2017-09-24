@@ -10,6 +10,7 @@ import UIKit
 
 struct Fruit {
     
-    let image : [UIImage] = [#imageLiteral(resourceName: "grape"),#imageLiteral(resourceName: "orange"),#imageLiteral(resourceName: "apple"),#imageLiteral(resourceName: "carrot"),#imageLiteral(resourceName: "pizza"),#imageLiteral(resourceName: "shank")]
+    let image : [UIImage] = [
+    #imageLiteral(resourceName: "orange"),#imageLiteral(resourceName: "apple"),#imageLiteral(resourceName: "carrot"),#imageLiteral(resourceName: "pizza"),#imageLiteral(resourceName: "shank")]
     
 }

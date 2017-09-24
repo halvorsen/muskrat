@@ -11,7 +11,7 @@ import GameplayKit
 
 class Enemy: SCNNode, BrothersUIAutoLayout {
     
-
+    var isGold = false
     var actualNode = SCNNode()
     var sphereMaterial = SCNMaterial()
     init(height: Float, rotation: Float) {
@@ -19,9 +19,9 @@ class Enemy: SCNNode, BrothersUIAutoLayout {
         
         let shape = SCNSphere(radius: Global.monsterRadius)
         
-        sphereMaterial.fresnelExponent = 1.0
-        sphereMaterial.shininess  = 1.0
-        sphereMaterial.transparency = 1.0
+//        sphereMaterial.fresnelExponent = 1.0
+//        sphereMaterial.shininess  = 1.0
+//        sphereMaterial.transparency = 1.0
         
         //            sphereMaterial.specular.contents = materialColor
         sphereMaterial.diffuse.contents = CustomColor.colors[CustomColor.current]
@@ -30,7 +30,7 @@ class Enemy: SCNNode, BrothersUIAutoLayout {
         //            sphereMaterial.selfIllumination.contents = materialColor
         //            sphereMaterial.multiply.contents = materialColor
         //        sphereMaterial.locksAmbientWithDiffuse = true
-        shape.materials = [sphereMaterial]
+        shape.firstMaterial = sphereMaterial //= [sphereMaterial]
         
         
         
