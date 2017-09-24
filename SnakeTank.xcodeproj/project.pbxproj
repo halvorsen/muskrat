@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		063A025C1F746D2B00E530D5 /* Fruit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 063A025B1F746D2B00E530D5 /* Fruit.swift */; };
+		536EA0AA0868FF63310D07FA /* Pods_SnakeTank.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16C749B77DB66440DA8C567C /* Pods_SnakeTank.framework */; };
 		A933B2271F5799130096F5EA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A933B2261F5799130096F5EA /* AppDelegate.swift */; };
 		A933B2291F5799130096F5EA /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = A933B2281F5799130096F5EA /* art.scnassets */; };
 		A933B22B1F5799130096F5EA /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A933B22A1F5799130096F5EA /* ViewController.swift */; };
@@ -32,6 +33,9 @@
 
 /* Begin PBXFileReference section */
 		063A025B1F746D2B00E530D5 /* Fruit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fruit.swift; sourceTree = "<group>"; };
+		16C749B77DB66440DA8C567C /* Pods_SnakeTank.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SnakeTank.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6033845ADD493E9FB856680A /* Pods-SnakeTank.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SnakeTank.release.xcconfig"; path = "Pods/Target Support Files/Pods-SnakeTank/Pods-SnakeTank.release.xcconfig"; sourceTree = "<group>"; };
+		99D6405688CA76E54D4C75F9 /* Pods-SnakeTank.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SnakeTank.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SnakeTank/Pods-SnakeTank.debug.xcconfig"; sourceTree = "<group>"; };
 		A933B2231F5799130096F5EA /* SnakeTank.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SnakeTank.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A933B2261F5799130096F5EA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A933B2281F5799130096F5EA /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
@@ -61,6 +65,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				536EA0AA0868FF63310D07FA /* Pods_SnakeTank.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -72,6 +77,8 @@
 			children = (
 				A933B2251F5799130096F5EA /* SnakeTank */,
 				A933B2241F5799130096F5EA /* Products */,
+				ECBB55472F723D4AFED387CB /* Pods */,
+				E89887AB0B9A5EF5338A2AA5 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -128,6 +135,23 @@
 			path = Menu;
 			sourceTree = "<group>";
 		};
+		E89887AB0B9A5EF5338A2AA5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				16C749B77DB66440DA8C567C /* Pods_SnakeTank.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		ECBB55472F723D4AFED387CB /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				99D6405688CA76E54D4C75F9 /* Pods-SnakeTank.debug.xcconfig */,
+				6033845ADD493E9FB856680A /* Pods-SnakeTank.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -135,9 +159,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = A933B2371F5799130096F5EA /* Build configuration list for PBXNativeTarget "SnakeTank" */;
 			buildPhases = (
+				FC302313BA50EE21E05B01F0 /* [CP] Check Pods Manifest.lock */,
 				A933B21F1F5799130096F5EA /* Sources */,
 				A933B2201F5799130096F5EA /* Frameworks */,
 				A933B2211F5799130096F5EA /* Resources */,
+				805EC14FC3ECF525532C77DE /* [CP] Embed Pods Frameworks */,
+				9688953A1C61896B19AF91FA /* [CP] Copy Pods Resources */,
+				06270C6B1F78282B0016D36D /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -194,6 +222,75 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		06270C6B1F78282B0016D36D /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Fabric/run\" a9cc3c114b202ec31390e423f8db307328800a9f 8999b85b5b17d0926cf3c5c45657aee0032aa33c613d4bf7779c97b9eaefdeca";
+		};
+		805EC14FC3ECF525532C77DE /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-SnakeTank/Pods-SnakeTank-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/GCHelper/GCHelper.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftyStoreKit/SwiftyStoreKit.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GCHelper.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyStoreKit.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SnakeTank/Pods-SnakeTank-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9688953A1C61896B19AF91FA /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SnakeTank/Pods-SnakeTank-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FC302313BA50EE21E05B01F0 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-SnakeTank-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		A933B21F1F5799130096F5EA /* Sources */ = {
@@ -351,6 +448,7 @@
 		};
 		A933B2381F5799130096F5EA /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 99D6405688CA76E54D4C75F9 /* Pods-SnakeTank.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -366,6 +464,7 @@
 		};
 		A933B2391F5799130096F5EA /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6033845ADD493E9FB856680A /* Pods-SnakeTank.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;

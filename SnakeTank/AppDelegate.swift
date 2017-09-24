@@ -7,6 +7,9 @@
 //
 
 import UIKit
+import Fabric
+import Crashlytics
+import GCHelper
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,6 +19,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        Fabric.with([Crashlytics.self])
+        Global.topScore = UserDefaults.standard.integer(forKey: "muskratTopScore")
+        if UserDefaults.standard.bool(forKey: "LaunchedBeforeMuskrat") {
+        GCHelper.sharedInstance.authenticateLocalUser()
+        } else {
+           UserDefaults.standard.set(true, forKey: "LaunchedBeforeMuskrat")
+        }
+        if UserDefaults.standard.bool(forKey: "isColorThemesMuskrat") {
+            Global.isColorThemes = true
+        }
         return true
     }
 

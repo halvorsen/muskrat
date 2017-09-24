@@ -9,6 +9,9 @@
 import UIKit
 import SceneKit
 import ARKit
+import GCHelper
+import StoreKit
+import SwiftyStoreKit
 
 class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout, UIGestureRecognizerDelegate, SCNPhysicsContactDelegate {
     
@@ -182,14 +185,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         for result in results {
             if let name = result.node.name {
                 
-                if name == "box1" {
+                if name == "box1" || name == "play" {
                     play()
                     return
-                } else if name == "box2" {
+                } else if name == "box2" || name == "gameCenter" {
                     gameCenter()
                     return
-                } else if name == "box3" {
+                } else if name == "box3" || name == "colorTheme" {
+                    if Global.isColorThemes {
                     colorTheme()
+                    } else {
+                        needToPayForTheme()
+                    }
                     return
                 }
             }
@@ -231,7 +238,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     }
     
     private func gameCenter() {
-        //run gamecenter leaderboard
+        GCHelper.sharedInstance.showGameCenter(self, viewState: .leaderboards)
     }
     
     private func colorTheme() {
@@ -289,10 +296,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                 self.sceneView.addGestureRecognizer(self.tapMenu)
             }
             once = false
+            GCHelper.sharedInstance.authenticateLocalUser()
             if Global.points > Global.topScore {
                 Global.topScore = Global.points
-                UserDefaults.standard.set(Global.points, forKey: "snakeTopScore")
-                // GCHelper.sharedInstance.reportLeaderboardIdentifier("highscore123654", score: Global.points)
+                UserDefaults.standard.set(Global.points, forKey: "muskratTopScore")
+                 GCHelper.sharedInstance.reportLeaderboardIdentifier("highscore1236544455", score: Global.topScore)
             }
             
             if let textGeometry = currentScore.geometry as? SCNText {
@@ -352,27 +360,68 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
     }
     
+    private func needToPayForTheme() {
+    // Create the alert controller
+    let alertController = UIAlertController(title: "Color Themes", message: "Unlock all for $0.99", preferredStyle: .alert)
+    
+    // Create the actions
+    let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default) {
+    UIAlertAction in
+    self.purchase()
+    
+    }
+    let restoreAction = UIAlertAction(title: "Restore Purchase", style: UIAlertActionStyle.default) {
+    UIAlertAction in
+    
+    SwiftyStoreKit.restorePurchases(atomically: true) { results in
+    if results.restoreFailedPurchases.count > 0 {
+    print("Restore Failed: \(results.restoreFailedPurchases)")
+    }
+    else if results.restoredPurchases.count > 0 {
+    Global.isColorThemes = true
+    UserDefaults.standard.set(true, forKey: "isColorThemesMuskrat")
+    }
+    else {
+    print("Nothing to Restore")
+    }
+    }
+    }
+    
+    let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel) {
+    UIAlertAction in
+    print("Cancel Pressed")
+    }
+    
+    // Add the actions
+    alertController.addAction(okAction)
+    alertController.addAction(restoreAction)
+    alertController.addAction(cancelAction)
+    
+    // Present the controller
+    self.present(alertController, animated: true, completion: nil)
+    }
+    
     var activityView = UIActivityIndicatorView()
-    private func purchase(productId: String = "muskrat.IAP.something") {
+    private func purchase(productId: String = "muskrat.IAP.colorTheme") {
         
         activityView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
         activityView.center = self.view.center
         activityView.startAnimating()
         activityView.alpha = 0.0
         self.view.addSubview(activityView)
-        //        SwiftyStoreKit.purchaseProduct(productId) { result in
-        //            switch result {
-        //            case .success( _):
-        //                Global.isPremium = true
-        //                UserDefaults.standard.set(true, forKey: "isPremiumMember")
-        //                self.activityView.removeFromSuperview()
-        //            case .error(let error):
-        //
-        //                print("error: \(error)")
-        //                print("Purchase Failed: \(error)")
-        //                self.activityView.removeFromSuperview()
-        //            }
-        //        }
+                SwiftyStoreKit.purchaseProduct(productId) { result in
+                    switch result {
+                    case .success( _):
+                        Global.isColorThemes = true
+                        UserDefaults.standard.set(true, forKey: "isColorThemesMuskrat")
+                        self.activityView.removeFromSuperview()
+                    case .error(let error):
+        
+                        print("error: \(error)")
+                        print("Purchase Failed: \(error)")
+                        self.activityView.removeFromSuperview()
+                    }
+                }
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
