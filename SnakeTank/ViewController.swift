@@ -403,7 +403,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     
     var activityView = UIActivityIndicatorView()
     private func purchase(productId: String = "muskrat.IAP.colorTheme") {
-        
+        print("entered purchase")
         activityView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
         activityView.center = self.view.center
         activityView.startAnimating()
