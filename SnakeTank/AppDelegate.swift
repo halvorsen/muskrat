@@ -25,6 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         GCHelper.sharedInstance.authenticateLocalUser()
         } else {
            UserDefaults.standard.set(true, forKey: "LaunchedBeforeMuskrat")
+            UserDefaults.standard.set(1, forKey: "MuskratColorTheme")
         }
         if UserDefaults.standard.bool(forKey: "isColorThemesMuskrat") {
             Global.isColorThemes = true

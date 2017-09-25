@@ -19,7 +19,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     var score = UILabel()
     var scoreInt = Int() {
         didSet{
+            print("did set score")
             DispatchQueue.main.async {
+                self.score.font = UIFont(name: "HelveticaNeue-Bold", size: 72*self.fontSizeMultiplier)
                 self.score.text = "\(self.scoreInt)"
             }
             
@@ -32,7 +34,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     var myColor = CustomColor.color2
     let instructionLabel = UILabel()
     var timer = Timer()
-    var myScheme = 1
     var wrapper = SCNNode()
     var snakeTail = [SCNNode]()
     var timer1 = Timer()
@@ -56,6 +57,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     
     override func viewDidLoad() {
         super.viewDidLoad()
+     //   Global.isColorThemes = true //hack
         let index = UserDefaults.standard.integer(forKey: "MuskratColorTheme")
         myColor = CustomColor.colors[index]
         
@@ -73,7 +75,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         score.textColor = CustomColor.color1
         score.alpha = 1.0
         score.textAlignment = .left
-        score.text = String(Global.points)
+        score.text = "TAP SHOOT - SWIPE MOVE"
         score.alpha = 0.0
         view.addSubview(score)
         
@@ -202,9 +204,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             }
         }
     }
-    
+    var isFirstPlay = true
     private func play() {
-        scoreInt = 0
+        
+        if isFirstPlay {
+            score.text = "TAP SHOOT - SWIPE MOVE"
+            score.font = UIFont(name: "HelveticaNeue-Bold", size: 18*fontSizeMultiplier)
+            isFirstPlay = false
+        } else {
+            scoreInt = 0
+        }
         score.alpha = 1.0
         rotateMenu(angle: -CGFloat.pi)
         snakeHead.opacity = 1.0
@@ -222,6 +231,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         sceneView.removeGestureRecognizer(tapMenu)
         sceneView.addGestureRecognizer(tap)
         //add monster timer
+        
+        
         
     }
     private func animation(done: @escaping () -> Void ) {
@@ -267,7 +278,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         CustomColor.current = 0
             
         default:
-            myColor = CustomColor.color1
+            myColor = CustomColor.color2
             UserDefaults.standard.set(0, forKey: "MuskratColorTheme")
             CustomColor.current = 0
         }
@@ -291,6 +302,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     var once = true
     func gameOver() {
         if once {
+            timer3.invalidate()
             DispatchQueue.main.async {
                 self.sceneView.removeGestureRecognizer(self.tap)
                 self.sceneView.addGestureRecognizer(self.tapMenu)
@@ -403,7 +415,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     
     var activityView = UIActivityIndicatorView()
     private func purchase(productId: String = "muskrat.IAP.colorTheme") {
-        print("entered purchase")
+    
         activityView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
         activityView.center = self.view.center
         activityView.startAnimating()
@@ -469,29 +481,22 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         4:.mouse,
         5:.deer
     ]
-    
-    //    @objc private func addRandomMonster() {
-    //
-    //        let random = Int(arc4random_uniform(6))
-    //        addMonster(type: monsterDictionary[random]!)
-    //        if monsterDictionary[random]! == .zombie {
-    //            addMonster(type: .zombie)
-    //            addMonster(type: .zombie)
-    //        } else if monsterDictionary[random]! == .butterfly {
-    //            addMonster(type: .butterfly)
-    //        }
-    //    }
-    
+
+    var invalidated = false
     var isFirstTap = true
     let bulletSpeed: Float = 10
     @objc func fireFunc(_ tapOnScreen: UITapGestureRecognizer) {
         
-        //        print(snakeHinge.eulerAngles.y)
+        if monsters.count > 150 {
+            timer3.invalidate()
+            invalidated = true
+        } else if invalidated && monsters.count < 5 {
+            timer3.fire()
+            invalidated = false
+        }
+        
         var dissappearTime: Double = 0.0
-        //        var whichPi = 1.0
-        //        if !(snakeHinge.eulerAngles.y <= Float.pi/2 && snakeHinge.eulerAngles.y >= -Float.pi/2) {
-        //            whichPi = -1.0
-        //        }
+    
         
         switch direction! {
         case .up:
@@ -826,7 +831,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
         timer1.invalidate()
         timer2.invalidate()
-        timer3.invalidate()
+        invalidated = false
         
         monsters.removeAll()
         monsters2.removeAll()
@@ -838,8 +843,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     var canGoUp : Bool = true
     let fruit = Fruit()
     func physicsWorld(_ world: SCNPhysicsWorld, didBegin contact: SCNPhysicsContact) {
-        print("A: \(contact.nodeA.physicsBody!.categoryBitMask)")
-        print("B: \(contact.nodeB.physicsBody!.categoryBitMask)")
+
         if contact.nodeA.physicsBody!.categoryBitMask == CollisionTypes.head.rawValue && contact.nodeB.physicsBody!.categoryBitMask == CollisionTypes.food.rawValue {
             // ate food
             
@@ -896,25 +900,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             
             loop: for i in 0..<monsters2.count {
                 if item == monsters2[i] {
-                    
-                    
                     item.geometry = SCNPlane(width: 2*Global.monsterRadius, height: 2*Global.monsterRadius)
                     if isGold[i] {
                         item.geometry?.firstMaterial?.diffuse.contents = #imageLiteral(resourceName: "grape")
                         item.geometry?.firstMaterial?.selfIllumination.contents = #imageLiteral(resourceName: "grape")
-                        //   item.geometry?.firstMaterial?.multiply.contents = #imageLiteral(resourceName: "grape")
                     } else {
                         let fr = chooseRandomFruit()
                         item.geometry?.firstMaterial?.diffuse.contents = fr
                         item.geometry?.firstMaterial?.selfIllumination.contents = fr
-                        //    item.geometry?.firstMaterial?.multiply.contents = fr
                     }
                     item.physicsBody?.categoryBitMask = CollisionTypes.food.rawValue
+                    item.physicsBody?.contactTestBitMask = CollisionTypes.head.rawValue
                     item.geometry?.firstMaterial?.diffuse.intensity = 1.0
-                    // item.geometry?.firstMaterial?.diffuse.contents = chooseRandomFruit()
                     item.constraints = [SCNBillboardConstraint()]
-                    //                        monsters.remove(at: i)
-                    //                        isGold.remove(at: i)
                     break loop
                 }
             }

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		06270C6D1F787FD90016D36D /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06270C6C1F787FD90016D36D /* GameKit.framework */; };
+		06270C6F1F787FE00016D36D /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06270C6E1F787FE00016D36D /* StoreKit.framework */; };
 		063A025C1F746D2B00E530D5 /* Fruit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 063A025B1F746D2B00E530D5 /* Fruit.swift */; };
 		536EA0AA0868FF63310D07FA /* Pods_SnakeTank.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16C749B77DB66440DA8C567C /* Pods_SnakeTank.framework */; };
 		A933B2271F5799130096F5EA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A933B2261F5799130096F5EA /* AppDelegate.swift */; };
@@ -32,6 +34,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		06270C6C1F787FD90016D36D /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
+		06270C6E1F787FE00016D36D /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		063A025B1F746D2B00E530D5 /* Fruit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fruit.swift; sourceTree = "<group>"; };
 		16C749B77DB66440DA8C567C /* Pods_SnakeTank.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SnakeTank.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6033845ADD493E9FB856680A /* Pods-SnakeTank.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SnakeTank.release.xcconfig"; path = "Pods/Target Support Files/Pods-SnakeTank/Pods-SnakeTank.release.xcconfig"; sourceTree = "<group>"; };
@@ -65,7 +69,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				06270C6F1F787FE00016D36D /* StoreKit.framework in Frameworks */,
 				536EA0AA0868FF63310D07FA /* Pods_SnakeTank.framework in Frameworks */,
+				06270C6D1F787FD90016D36D /* GameKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -138,6 +144,8 @@
 		E89887AB0B9A5EF5338A2AA5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				06270C6E1F787FE00016D36D /* StoreKit.framework */,
+				06270C6C1F787FD90016D36D /* GameKit.framework */,
 				16C749B77DB66440DA8C567C /* Pods_SnakeTank.framework */,
 			);
 			name = Frameworks;
@@ -188,6 +196,14 @@
 				TargetAttributes = {
 					A933B2221F5799130096F5EA = {
 						CreatedOnToolsVersion = 9.0;
+						SystemCapabilities = {
+							com.apple.GameCenter = {
+								enabled = 1;
+							};
+							com.apple.InAppPurchase = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -370,7 +386,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -455,7 +471,7 @@
 				DEVELOPMENT_TEAM = 3KFA49ZHXN;
 				INFOPLIST_FILE = SnakeTank/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.rightBrothers.SnakeTank;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rightBrothers.snakeGame;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -471,7 +487,7 @@
 				DEVELOPMENT_TEAM = 3KFA49ZHXN;
 				INFOPLIST_FILE = SnakeTank/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.rightBrothers.SnakeTank;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rightBrothers.snakeGame;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
