@@ -75,7 +75,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         score.textColor = CustomColor.color1
         score.alpha = 1.0
         score.textAlignment = .left
-        score.text = "TAP SHOOT - SWIPE MOVE"
+        score.text = "Tap to Shoot"
         score.alpha = 0.0
         view.addSubview(score)
         
@@ -222,7 +222,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         }
         animation() {
             
-            self.timer3 = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true, block: {_ in
+            self.timer3 = Timer.scheduledTimer(withTimeInterval: 0.4, repeats: true, block: {_ in
                 let _ = self.addMonster(type: .deer)})
         }
         self.timer2 = Timer.scheduledTimer(timeInterval: deerDuration, target: self, selector: #selector(ViewController.monsterFunc), userInfo: nil, repeats: true)
@@ -524,7 +524,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             let bullet = Bullet(height: snakeHinge.position.y, rotation: snakeHinge.rotation.y*snakeHinge.rotation.w - 0.03, rotate90: true)
             wrapper.addChildNode(bullet)
             dissappearTime = Double(duration*3.14*1.5/20)
-            let moveObject = SCNAction.rotateBy(x: 0, y: -CGFloat.pi, z: 0, duration: dissappearTime)
+            let moveObject = SCNAction.rotateBy(x: 0, y: -CGFloat.pi/2, z: 0, duration: dissappearTime/2)
             bullet.runAction(moveObject)
             Global.delay(bySeconds: dissappearTime) {
                 bullet.removeFromParentNode()
@@ -533,7 +533,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             let bullet = Bullet(height: snakeHinge.position.y, rotation: snakeHinge.rotation.y*snakeHinge.rotation.w + 0.05, rotate90: true)
             wrapper.addChildNode(bullet)
             dissappearTime = Double(duration*3.14*1.5/20)
-            let moveObject = SCNAction.rotateBy(x: 0, y: CGFloat.pi, z: 0, duration: dissappearTime)
+            let moveObject = SCNAction.rotateBy(x: 0, y: CGFloat.pi/2, z: 0, duration: dissappearTime/2)
             bullet.runAction(moveObject)
             Global.delay(bySeconds: dissappearTime) {
                 bullet.removeFromParentNode()
@@ -900,7 +900,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             
             loop: for i in 0..<monsters2.count {
                 if item == monsters2[i] {
-                    item.geometry = SCNPlane(width: 2*Global.monsterRadius, height: 2*Global.monsterRadius)
+                    item.geometry = SCNPlane(width: 3*Global.monsterRadius, height: 3*Global.monsterRadius)
                     if isGold[i] {
                         item.geometry?.firstMaterial?.diffuse.contents = #imageLiteral(resourceName: "grape")
                         item.geometry?.firstMaterial?.selfIllumination.contents = #imageLiteral(resourceName: "grape")
