@@ -487,13 +487,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     let bulletSpeed: Float = 10
     @objc func fireFunc(_ tapOnScreen: UITapGestureRecognizer) {
         
-        if monsters.count > 150 {
-            timer3.invalidate()
-            invalidated = true
-        } else if invalidated && monsters.count < 5 {
-            timer3.fire()
-            invalidated = false
-        }
+//        if monsters.count > 150 {
+//            timer3.invalidate()
+//            invalidated = true
+//        } else if invalidated && monsters.count < 5 {
+//            timer3.fire()
+//            invalidated = false
+//        }
         
         var dissappearTime: Double = 0.0
     
@@ -558,6 +558,27 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         let globalPositionOfSnakeHead = snakeHinge.convertPosition(snakeHead.position, to: wrapper)
         let moveObject = SCNAction.move(to: SCNVector3(x: globalPositionOfSnakeHead.x , y: globalPositionOfSnakeHead.y , z: globalPositionOfSnakeHead.z ), duration: trailTime + 0.08)
         snakeTail[0].runAction(moveObject)
+        
+        //change first few to fruits
+        if monsters2.count < 5 {
+            for i in 0..<monsters2.count {
+                
+                monsters2[i].geometry = SCNPlane(width: 3*Global.monsterRadius, height: 3*Global.monsterRadius)
+                if isGold[i] {
+                    monsters2[i].geometry?.firstMaterial?.diffuse.contents = #imageLiteral(resourceName: "grape")
+                    monsters2[i].geometry?.firstMaterial?.selfIllumination.contents = #imageLiteral(resourceName: "grape")
+                } else {
+                    let fr = chooseRandomFruit()
+                    monsters2[i].geometry?.firstMaterial?.diffuse.contents = fr
+                    monsters2[i].geometry?.firstMaterial?.selfIllumination.contents = fr
+                }
+                monsters2[i].physicsBody?.categoryBitMask = CollisionTypes.food.rawValue
+                monsters2[i].physicsBody?.contactTestBitMask = CollisionTypes.head.rawValue
+                monsters2[i].geometry?.firstMaterial?.diffuse.intensity = 1.0
+                monsters2[i].constraints = [SCNBillboardConstraint()]
+                
+            }
+        }
         
     }
     
