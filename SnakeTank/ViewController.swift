@@ -194,7 +194,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                     gameCenter()
                     return
                 } else if name == "box3" || name == "colorTheme" {
-                    if Global.isColorThemes {
+                    if Global.isColorThemes { 
                     colorTheme()
                     } else {
                         needToPayForTheme()
@@ -547,20 +547,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     let snakeSpeed: Float = 1200
     let ballRadius: Float = 1
     @objc func followFunc() {
-        guard snakeTail.count > 0 else {return}
         
-        for i in 1..<snakeTail.count {
-            
-            let moveObject = SCNAction.move(to: snakeTail[i-1].position, duration: trailTime)
-            snakeTail[i].runAction(moveObject)
-        }
-        
-        let globalPositionOfSnakeHead = snakeHinge.convertPosition(snakeHead.position, to: wrapper)
-        let moveObject = SCNAction.move(to: SCNVector3(x: globalPositionOfSnakeHead.x , y: globalPositionOfSnakeHead.y , z: globalPositionOfSnakeHead.z ), duration: trailTime + 0.08)
-        snakeTail[0].runAction(moveObject)
-        
-        //change first few to fruits
-        if monsters2.count < 5 {
+        if monsters2.count < 10 {
             for i in 0..<monsters2.count {
                 
                 monsters2[i].geometry = SCNPlane(width: 3*Global.monsterRadius, height: 3*Global.monsterRadius)
@@ -579,6 +567,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                 
             }
         }
+        
+        guard snakeTail.count > 0 else {return}
+        
+        for i in 1..<snakeTail.count {
+            
+            let moveObject = SCNAction.move(to: snakeTail[i-1].position, duration: trailTime)
+            snakeTail[i].runAction(moveObject)
+        }
+        
+        let globalPositionOfSnakeHead = snakeHinge.convertPosition(snakeHead.position, to: wrapper)
+        let moveObject = SCNAction.move(to: SCNVector3(x: globalPositionOfSnakeHead.x , y: globalPositionOfSnakeHead.y , z: globalPositionOfSnakeHead.z ), duration: trailTime + 0.08)
+        snakeTail[0].runAction(moveObject)
+        
+        //change first few to fruits
+        
         
     }
     
